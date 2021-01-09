@@ -11,6 +11,7 @@ import Home from '@/views/home/index.vue'
 import Layout from '@/views/layout/index.vue'
 import Navigation from '@/views/navigation/'
 import HostMonitor from '@/views/hostmonitor/index'
+import ServiceManager from '@/views/servicemanager/index'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
         path: '/hostmonitor',
         name: HostMonitor,
         component: HostMonitor
+      },
+      {
+        path: '/servicemanager',
+        name: ServiceManager,
+        component: ServiceManager
       }
     ]
   }

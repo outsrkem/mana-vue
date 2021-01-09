@@ -22,9 +22,9 @@
       <i class="el-icon-stopwatch"></i>
       <span slot="title">主机监控</span>
     </el-menu-item>
-    <el-menu-item index="/publish">
-      <i class="el-icon-menu"></i>
-      <span slot="title">发布文章</span>
+    <el-menu-item index="/servicemanager">
+      <i class="el-icon-mouse"></i>
+      <span slot="title">服务管理</span>
     </el-menu-item>
     <el-menu-item index="/comment">
       <i class="el-icon-menu"></i>
