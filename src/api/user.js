@@ -4,19 +4,32 @@
 import request from '@/utils/request'
 
 // 用户登录
+// /api/v1/common/users/authorizations
 export const login = data => {
   return request({
-    method: 'GET',
-    url: '/api/v1/common/navigation/links',
-    // data 用来设置 POST 请求体
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
+    url: '/api/v1/common/users/authorizations',
+    // data 用来设置 POST 请求体, 是一个对象， 为json格式
     data
   })
 }
 
 // 获取用户信息
-// export const getUserInfo = () => {
-
-// }
+// /api/v1/common/users/123
+export const getUserInfo = () => {
+  const user = JSON.parse(window.localStorage.getItem('user'))
+  // console.log(user)
+  return request({
+    method: 'POST',
+    headers:
+      {
+        'Content-Type': 'application/json;charset=utf-8'
+        // 'X-Auth-Token': `${user.token}`
+      },
+    url: `/api/v1/common/users/${user.userid}/userinfo`
+  })
+}
 
 // 修改用户信息
 // export const updateUser = () => {

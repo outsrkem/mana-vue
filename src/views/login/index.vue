@@ -12,13 +12,13 @@
       <el-form class="login-form" ref="form" :model="user">
         <el-form-item>
           <el-input
-            v-model="user.mobile"
+            v-model="user.username"
             placeholder="请输入手机号"
           ></el-input>
         </el-form-item>
         <el-form-item>
           <el-input
-            v-model="user.code"
+            v-model="user.password"
             placeholder="请输入验证码"
           ></el-input>
         </el-form-item>
@@ -48,8 +48,8 @@ export default {
   data () {
     return {
       user: {
-        mobile: '13911111111', // 手机号
-        code: '246810' // 验证码
+        username: '13911111111', // 手机号
+        password: '246810' // 验证码
       },
       checked: false // 是否同意协议的选中状态
     }
@@ -72,8 +72,9 @@ export default {
       // 我们建议的做法是把所有的请求都封装成函数然后统一的组织到模块中进行管理
       // 这样做的好处就是：管理维护更方便，也好重用
       login(this.user).then(res => {
-        console.log(res)
         // 登录成功
+        // 保存信息
+        window.localStorage.setItem('user', JSON.stringify(res.data.response))
         // 跳转到首页
         // this.$router.push('/')
         this.$router.push({

@@ -9,13 +9,13 @@
     <el-container>
       <el-header class="header">
         <div>
-          <li class="el-icon-s-fold"></li>
+          <i class="el-icon-s-fold"></i>
           <span>管理系统</span>
         </div>
         <el-dropdown>
           <div class="avatar-wrap">
-            <img class="avatar">
-            <span>用户名</span>
+            <img class="avatar" src="" alt="">
+            <span>{{ user.username }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -34,6 +34,7 @@
 
 <script>
 import AppAside from './components/aside'
+import { getUserInfo } from '@/api/user.js'
 
 export default {
   name: 'LayoutIndex',
@@ -42,15 +43,27 @@ export default {
   },
   props: {},
   data () {
-    return {}
+    return {
+      user: {} // 当前登录用户信息
+    }
   },
   computed: {},
   watch: {},
   created () {
+    // 组件初始化好，请求获取用户资料
+    this.loadUserInfo()
   },
   mounted () {
   },
-  methods: {}
+  methods: {
+    // 除了登录接口，其它所有接口都需要授权才能请求使用
+    // 或者说，除了登录接口，其它接口都需要提供你的身份令牌才能获取数据
+    loadUserInfo () {
+      getUserInfo().then(res => {
+        this.user = res.data.response
+      })
+    }
+  }
 }
 </script>
 
@@ -91,7 +104,6 @@ export default {
     }
   }
 }
-
 
 .main {
   background-color: #e9eef3;
