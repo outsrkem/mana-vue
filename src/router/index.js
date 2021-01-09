@@ -9,6 +9,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/login/index.vue'
 import Home from '@/views/home/index.vue'
 import Layout from '@/views/layout/index.vue'
+import Navigation from '@/views/navigation/'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
         // 参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
         name: 'home',
         component: Home
+      },
+      {
+        path: '/navigation',
+        name: Navigation,
+        component: Navigation
       }
     ]
   }
