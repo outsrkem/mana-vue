@@ -15,7 +15,7 @@
       <span slot="title">首页</span>
     </el-menu-item>
     <el-menu-item index="/navigation">
-      <i class="el-icon-menu"></i>
+      <i class="el-icon-link"></i>
       <span slot="title">导航链接</span>
     </el-menu-item>
     <el-menu-item index="3">
