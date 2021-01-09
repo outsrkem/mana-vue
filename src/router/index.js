@@ -10,6 +10,7 @@ import Login from '@/views/login/index.vue'
 import Home from '@/views/home/index.vue'
 import Layout from '@/views/layout/index.vue'
 import Navigation from '@/views/navigation/'
+import HostMonitor from '@/views/hostmonitor/index'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
         path: '/navigation',
         name: Navigation,
         component: Navigation
+      },
+      {
+        path: '/hostmonitor',
+        name: HostMonitor,
+        component: HostMonitor
       }
     ]
   }

@@ -18,9 +18,9 @@
       <i class="el-icon-link"></i>
       <span slot="title">导航链接</span>
     </el-menu-item>
-    <el-menu-item index="3">
-      <i class="el-icon-menu"></i>
-      <span slot="title">素材管理</span>
+    <el-menu-item index="/hostmonitor">
+      <i class="el-icon-stopwatch"></i>
+      <span slot="title">主机监控</span>
     </el-menu-item>
     <el-menu-item index="/publish">
       <i class="el-icon-menu"></i>
