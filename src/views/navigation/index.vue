@@ -45,8 +45,11 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="content"
-          label="地址">
+          label="地址"
+        >
+          <template scope="scope">
+            <a :href="scope.row.content" target="_blank" style="text-decoration:none;">{{ scope.row.content }}</a>
+          </template>
         </el-table-column>
       </el-table>
       <!--/表格开始-->

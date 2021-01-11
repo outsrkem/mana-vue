@@ -12,6 +12,7 @@ import Layout from '@/views/layout/index.vue'
 import Navigation from '@/views/navigation/'
 import HostMonitor from '@/views/hostmonitor/index'
 import ServiceManager from '@/views/servicemanager/index'
+import Settings from '@/views/settings/'
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,11 @@ const routes = [
         path: '/servicemanager',
         name: ServiceManager,
         component: ServiceManager
+      },
+      {
+        path: '/settings',
+        name: 'settings',
+        component: Settings
       }
     ]
   }
