@@ -46,10 +46,11 @@
         </el-table-column>
         <el-table-column
           label="地址"
+          prop="content"
         >
-          <template scope="scope">
-            <a :href="scope.row.content" target="_blank" style="text-decoration:none;">{{ scope.row.content }}</a>
-          </template>
+          <!--          <template scope="scope">-->
+          <!--            <a :href="scope.row.content" target="_blank" style="text-decoration:none;">{{ scope.row.content }}</a>-->
+          <!--          </template>-->
         </el-table-column>
       </el-table>
       <!--/表格开始-->
