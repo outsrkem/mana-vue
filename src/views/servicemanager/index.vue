@@ -13,15 +13,27 @@
         </el-breadcrumb>
         <!--/面包屑导航-->
         <div>
-          <el-select v-model="clusterId" @change="onNameSpaces('namespaces')" filterable placeholder="请选择">
+          <el-select
+            size="small"
+            v-model="clusterId"
+            @change="onNameSpaces('namespaces')"
+            filterable
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in clusters"
               :key="item.clusterId"
               :label="item.clusterLabel"
-              :value="item.clusterId">
+              :value="item.clusterId"
+            >
             </el-option>
           </el-select>
-          <el-select v-model="ns" filterable placeholder="请选择">
+          <el-select
+            size="small"
+            v-model="ns"
+            filterable
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in namespaces"
               :key="item.ns"
@@ -30,7 +42,12 @@
             >
             </el-option>
           </el-select>
-          <el-select v-model="control" filterable placeholder="请选择">
+          <el-select
+            size="small"
+            v-model="control"
+            filterable
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in controls"
               :key="item.controlValue"
