@@ -4,7 +4,7 @@
     route 是开启路由模式
    -->
   <el-menu
-    default-active="/"
+    :default-active="$route.path"
     background-color="#002033"
     text-color="#fff"
     active-text-color="#ffd04b"
