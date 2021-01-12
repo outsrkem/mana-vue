@@ -5,6 +5,17 @@
  */
 import request from '@/utils/request'
 
+// 添加集群
+// /api/v1/common/kubernetes/cluster?type=cluster
+export const addCluster = data => {
+  return request({
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
+    url: '/api/v1/common/kubernetes/cluster',
+    data
+  })
+}
+
 // 获取集群列表
 // /api/v1/common/kubernetes/cluster?type=cluster
 export const getCluster = params => {

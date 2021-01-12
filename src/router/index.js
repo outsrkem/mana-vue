@@ -13,6 +13,7 @@ import Navigation from '@/views/navigation/'
 import HostMonitor from '@/views/hostmonitor/index'
 import ServiceManager from '@/views/servicemanager/index'
 import Settings from '@/views/settings/'
+import Cluster from '@/views/kubernetes/cluster/index'
 
 Vue.use(VueRouter)
 
@@ -47,6 +48,11 @@ const routes = [
         path: '/hostmonitor',
         name: HostMonitor,
         component: HostMonitor
+      },
+      {
+        path: '/cluster',
+        name: Cluster,
+        component: Cluster
       },
       {
         path: '/servicemanager',

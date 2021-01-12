@@ -4,7 +4,7 @@
     route 是开启路由模式
    -->
   <el-menu
-    :default-active="$route.path"
+    default-active="$route.path"
     background-color="#002033"
     text-color="#fff"
     active-text-color="#ffd04b"
@@ -25,6 +25,10 @@
     <el-menu-item index="/servicemanager">
       <i class="el-icon-mouse"></i>
       <span slot="title">服务管理</span>
+    </el-menu-item>
+    <el-menu-item index="/cluster">
+      <i class="el-icon-box"></i>
+      <span slot="title">集群管理</span>
     </el-menu-item>
     <el-menu-item index="/settings">
       <i class="el-icon-menu"></i>
