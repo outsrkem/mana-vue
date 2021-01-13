@@ -15,14 +15,12 @@
         <!--功能按钮-->
         <el-row>
           <el-button size="small" type="primary" @click="dialogVisible = true">添加集群</el-button>
-          <el-button type="primary" size="small">删除集群</el-button>
           <el-dialog
             title="添加集群鉴权文件"
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose"
-            append-to-body="true"
-            close-on-click-modal="false"
+            append-to-body
           >
             <el-input
               type="textarea"
@@ -46,7 +44,9 @@
           <el-button
             size="small"
             icon="el-icon-refresh"
-            @click="onRefresh">
+            @click="onRefresh"
+            :loading="refreshLoading"
+          >
           </el-button>
         </el-row>
         <!--/刷新按钮-->
@@ -54,12 +54,9 @@
       <!--中间内容部分-->
       <el-table
         :data="ClusterList"
-        style="width: 100%">
-        <el-table-column
-          prop="server"
-          label="集群ID"
-        >
-        </el-table-column>
+        style="width: 100%"
+        v-loading="loading"
+      >
         <el-table-column
           prop="clusterName"
           label="名称"
@@ -80,6 +77,13 @@
         <el-table-column
           prop="status"
           label="状态">
+        </el-table-column>
+        <el-table-column
+          label="操作"
+        >
+          <template slot-scope="props">
+            <el-button type="text" @click="onDeleteClusterConfig(props.row.server)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <!--/中间内容部分-->
@@ -104,7 +108,8 @@
 <script>
 import {
   addCluster,
-  getCluster
+  getCluster,
+  deleteCluster
 } from '@/api/kubernetes'
 
 export default {
@@ -118,7 +123,10 @@ export default {
       pageSize: 10,
       ClusterList: [],
       dialogVisible: false,
-      clusterConfig: null
+      clusterConfig: null,
+      clusterConfigId: null,
+      loading: null,
+      refreshLoading: false
     }
   },
   computed: {},
@@ -138,6 +146,11 @@ export default {
       }).then(res => {
         const ClusterList = res.data.response.items
         this.ClusterList = ClusterList
+        this.loading = false
+        this.refreshLoading = false
+      }).catch(_ => {
+        // 刷新失败，也重置刷新按钮
+        this.refreshLoading = false
       })
     },
     AddCluster () {
@@ -151,6 +164,8 @@ export default {
             type: 'success'
           })
         }
+        // 操作成功，刷新页面
+        this.loadCluster('cluster')
       }).catch(err => {
         // 失败
         this.$notify({
@@ -161,13 +176,8 @@ export default {
       })
       this.clusterConfig = null
     },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {
-        })
+    handleClose (_) {
+      this.dialogVisible = false
     },
     onCurrentChange (page) {
       // console.log(page)
@@ -180,7 +190,45 @@ export default {
     },
     onRefresh () {
       // 刷新页面
+      this.refreshLoading = true
       this.loadCluster('cluster', this.pageSize, this.page)
+    },
+    deleteClusterConfig (clusterConfigId) {
+      deleteCluster({
+        address: clusterConfigId
+      }).then(res => {
+        // 成功
+        this.$notify({
+          duration: 700,
+          title: '删除集群成功',
+          message: '删除' + clusterConfigId,
+          type: 'success'
+        })
+        // 操作成功，刷新页面
+        this.loadCluster('cluster')
+      }).catch(err => {
+        // 失败
+        this.$notify({
+          title: '删除集失败',
+          message: err,
+          type: 'error'
+        })
+      })
+    },
+    onDeleteClusterConfig (cconfigId) {
+      this.$confirm('此操作将永久删除该集群配置, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确定
+        this.deleteClusterConfig(cconfigId)
+      }).catch(() => {
+        this.$notify.info({
+          duration: 700,
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
@@ -195,5 +243,26 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.el-col {
+  border-radius: 4px;
+}
+
+.bg-purple-dark {
+  background: #99a9bf;
+}
+
+.bg-purple {
+  background: #d3dce6;
+}
+
+.bg-purple-light {
+  background: #e5e9f2;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
 }
 </style>

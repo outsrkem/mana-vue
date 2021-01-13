@@ -47,3 +47,13 @@ export const getWorkingLoad = params => {
     params
   })
 }
+
+// 删除集群配置
+export const deleteCluster = params => {
+  return request({
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
+    url: '/api/v1/common/kubernetes/cluster',
+    params
+  })
+}

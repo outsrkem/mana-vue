@@ -33,6 +33,7 @@
             v-model="ns"
             filterable
             placeholder="请选择"
+            style="margin-left: 20px;"
           >
             <el-option
               v-for="item in namespaces"
@@ -47,6 +48,7 @@
             v-model="control"
             filterable
             placeholder="请选择"
+            style="margin-left: 20px;"
           >
             <el-option
               v-for="item in controls"
