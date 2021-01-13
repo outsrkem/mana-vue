@@ -180,11 +180,10 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.loadCluster('cluster')// 加载集群列表信息，用于筛选集群获取负载
-
-    if (this.clusterId) {
-      this.loadWorkingLoad() // 加载工作负载
-    }
+    // 加载集群列表信息，用于筛选集群获取负载
+    this.loadCluster('cluster')
+    // 加载工作负载
+    this.loadWorkingLoad()
   },
   mounted () {
   },
