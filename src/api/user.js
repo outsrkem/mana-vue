@@ -9,7 +9,7 @@ export const login = data => {
   return request({
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8"' },
-    url: '/api/v1/common/users/login',
+    url: '/api/v1/common/user/login',
     // data 用来设置 POST 请求体, 是一个对象， 为json格式
     data
   })
@@ -21,13 +21,13 @@ export const getUserInfo = () => {
   const user = JSON.parse(window.localStorage.getItem('user'))
   // console.log(user)
   return request({
-    method: 'POST',
+    method: 'GET',
     headers:
       {
         'Content-Type': 'application/json;charset=utf-8'
         // 'X-Auth-Token': `${user.token}`
       },
-    url: `/api/v1/common/users/userinfo/${user.userid}`
+    url: `/api/v1/common/user/userinfo/${user.userid}`
   })
 }
 

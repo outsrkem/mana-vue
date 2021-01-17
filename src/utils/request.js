@@ -25,7 +25,7 @@ request.interceptors.request.use(
     // 如果有登录用户信息，则统一设置 token
     if (user) {
       // config.headers.AuthorizationsToken = `${user.token}`
-      config.headers['Authorizations-Token'] = `${user.token}`
+      config.headers['X-Auth-Token'] = `${user.token}`
       config.headers['Content-Type'] = 'application/json;charset=utf-8'
     }
     // 当这里 return config 之后请求在会真正的发出去

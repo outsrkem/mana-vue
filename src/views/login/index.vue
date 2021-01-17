@@ -48,8 +48,8 @@ export default {
   data () {
     return {
       user: {
-        username: '13911111111', // 手机号
-        password: '246810' // 验证码
+        username: 'admin', // 手机号
+        password: '123456' // 验证码
       },
       checked: false // 是否同意协议的选中状态
     }
