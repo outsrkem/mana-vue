@@ -181,13 +181,18 @@ export default {
   watch: {},
   created () {
     // 加载集群列表信息，用于筛选集群获取负载
-    this.loadCluster('cluster')
+    // this.loadCluster('cluster')
     // 加载工作负载
-    this.loadWorkingLoad()
+    this.loadWorkingInfo()
   },
   mounted () {
   },
   methods: {
+    // 处理先加载集群信息，后加载工作复杂
+    async loadWorkingInfo () {
+      await this.loadCluster('cluster')
+      this.loadWorkingLoad()
+    },
     loadCluster (type) {
       // 获取取群列表
       getCluster({
