@@ -10,7 +10,6 @@ import request from '@/utils/request'
 export const addCluster = data => {
   return request({
     method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
     url: '/api/v1/common/kubernetes/cluster',
     data
   })
@@ -21,7 +20,6 @@ export const addCluster = data => {
 export const getCluster = params => {
   return request({
     method: 'GET',
-    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
     url: '/api/v1/common/kubernetes/cluster',
     params
   })
@@ -32,7 +30,6 @@ export const getCluster = params => {
 export const getNameSpaces = params => {
   return request({
     method: 'GET',
-    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
     url: '/api/v1/common/kubernetes/cluster',
     params
   })
@@ -42,7 +39,6 @@ export const getNameSpaces = params => {
 export const getWorkingLoad = params => {
   return request({
     method: 'GET',
-    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
     url: '/api/v1/common/kubernetes/cluster',
     params
   })
@@ -52,7 +48,6 @@ export const getWorkingLoad = params => {
 export const deleteCluster = params => {
   return request({
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
     url: '/api/v1/common/kubernetes/cluster',
     params
   })

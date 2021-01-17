@@ -30,7 +30,8 @@
             class="login-btn"
             type="primary"
             @click="onLogin"
-          >登录</el-button>
+          >登录
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -56,8 +57,10 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {},
-  mounted () {},
+  created () {
+  },
+  mounted () {
+  },
   methods: {
     onLogin () {
       // 获取表单数据（根据接口要求绑定数据）
@@ -103,13 +106,16 @@ export default {
   align-items: center;
   background: url("./login_bg.jpg") no-repeat;
   background-size: cover;
+
   .login-form-wrap {
     min-width: 300px;
     padding: 30px 50px 10px;
     background-color: #fff;
+
     .login-head {
       display: flex;
       justify-content: center;
+
       .logo {
         width: 200px;
         height: 57px;
@@ -117,6 +123,7 @@ export default {
         background-size: contain;
       }
     }
+
     .login-form {
       .login-btn {
         width: 100%;

@@ -1,8 +1,10 @@
 <template>
-  <div class="home-container">首页</div>
+  <div class="home-container">{{ userInfo.username }}</div>
 </template>
 
 <script>
+import { test } from '@/api/index.js'
+
 export default {
   // 指定 name 选项的另一个好处是便于调试。
   // 有名字的组件有更友好的警告信息。
@@ -12,13 +14,23 @@ export default {
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      userInfo: [{
+        userid: '1610853130945803400',
+        username: 'admin'
+      }]
+    }
   },
   computed: {},
   watch: {},
   created () {
   },
-  mounted () {
+  async mounted () {
+    // 调用 ajax 的封装
+    const res = await test()
+    // 可直接获取到返回的数据
+    console.log(res)
+    this.userInfo = res.response
   },
   methods: {}
 }
