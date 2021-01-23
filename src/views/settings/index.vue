@@ -28,7 +28,7 @@
             </el-form-item>
             <el-form-item label="联系电话：">{{ user.mobile }}
             </el-form-item>
-            <el-form-item label="个人描述：">{{ user.desc }}
+            <el-form-item label="个人描述：">{{ user.describes }}
             </el-form-item>
             <el-form-item>
               <el-button type="primary">修改</el-button>
@@ -57,7 +57,7 @@ export default {
         username: '',
         email: '',
         mobile: '',
-        desc: ''
+        describes: ''
       }
     }
   },
