@@ -1,27 +1,97 @@
 <template>
-  <div class="home-container">个人设置</div>
+  <div class="settings-container">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix my_refresh">
+        <!--面包屑导航-->
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>个人设置</el-breadcrumb-item>
+        </el-breadcrumb>
+        <!--/面包屑导航-->
+        <!--刷新按钮-->
+        <el-row>
+          <el-button
+            size="small"
+            icon="el-icon-refresh"
+            @click="onRefresh">
+          </el-button>
+        </el-row>
+        <!--/刷新按钮-->
+      </div>
+      <!--内容开始-->
+      <el-row>
+        <el-col :span="10">
+          <el-form ref="form" :model="user" label-width="100px">
+            <el-form-item label="用户名称：">{{ user.username }}
+            </el-form-item>
+            <el-form-item label="个人邮箱：">{{ user.email }}
+            </el-form-item>
+            <el-form-item label="联系电话：">{{ user.mobile }}
+            </el-form-item>
+            <el-form-item label="个人描述：">{{ user.desc }}
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary">修改</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+
+      <!--/内容开始-->
+    </el-card>
+  </div>
 </template>
 
 <script>
+import { getUserInfo } from '@/api/user'
+
 export default {
-  // 指定 name 选项的另一个好处是便于调试。
-  // 有名字的组件有更友好的警告信息。
-  // 另外，当在有 vue-devtools，未命名组件将显示成 <AnonymousComponent>，这很没有语义。通过提供 name 选项，可以获得更有语义信息的组件树。
-  // 结论：给一个组件起个名字是非常有意义的，尽量不要让组件的名字重复
-  name: 'HomeIndex',
+
+  name: 'Settings',
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      user: {
+        userid: '',
+        username: '',
+        email: '',
+        mobile: '',
+        desc: ''
+      }
+    }
   },
   computed: {},
   watch: {},
   created () {
+    // 组件初始化好，请求获取用户资料
+    this.loadUserInfo()
   },
   mounted () {
   },
-  methods: {}
+  methods: {
+    loadUserInfo () {
+      // 获取用户信息
+      getUserInfo().then(res => {
+        this.user = res.data.response
+      })
+    },
+    onRefresh () {
+      // 刷新页面
+      this.loadUserInfo()
+    }
+  }
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.filter-card {
+  margin-bottom: 20px;
+}
+
+.my_refresh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
