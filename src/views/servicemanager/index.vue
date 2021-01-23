@@ -233,7 +233,9 @@ export default {
       }).then(res => {
         const { total: pageTotal } = res.data.response.pageInfo
         this.workingLoad = res.data.response.items
-        this.pageTotal = pageTotal
+        // this.pageTotal = pageTotal
+        // 转为int
+        this.pageTotal = parseInt(pageTotal)
       })
     },
     onCurrentChange (page) {

@@ -1,5 +1,5 @@
 <template>
-  <div className="cluster-container">
+  <div>
     <!--
     Card 卡片
     将信息聚合在卡片容器中展示。
@@ -60,7 +60,7 @@
         <el-table-column
           prop="clusterName"
           label="名称"
-          width="180">
+        >
         </el-table-column>
         <el-table-column
           prop="userName"
@@ -82,7 +82,7 @@
           label="操作"
         >
           <template slot-scope="props">
-            <el-button type="text" @click="onDeleteClusterConfig(props.row.server)">删除</el-button>
+            <el-button type="text" size="small" @click="onDeleteClusterConfig(props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -137,15 +137,15 @@ export default {
   mounted () {
   },
   methods: {
-    loadCluster (type, pageSize = 10, page = 1) {
+    loadCluster (pageSize = 10, page = 1) {
       // 获取取群列表
       getCluster({
-        type: type,
-        'page_size': pageSize,
+        page_size: pageSize,
         page
       }).then(res => {
-        const ClusterList = res.data.response.items
-        this.ClusterList = ClusterList
+        const { total: pageTotal } = res.data.response.pageInfo
+        this.ClusterList = res.data.response.items
+        this.pageTotal = parseInt(pageTotal)
         this.loading = false
         this.refreshLoading = false
       }).catch(_ => {
@@ -165,7 +165,7 @@ export default {
           })
         }
         // 操作成功，刷新页面
-        this.loadCluster('cluster')
+        this.loadCluster()
       }).catch(err => {
         // 失败
         this.$notify({
@@ -182,21 +182,24 @@ export default {
     onCurrentChange (page) {
       // console.log(page)
       this.page = page
+      const pageSize = this.pageSize
+      this.loadCluster(pageSize, page)
     },
     onSizeChange (pageSize) {
       // console.log(pageSize)
       this.pageSize = pageSize
       this.currentPage = 1
+      this.loadCluster(pageSize, 1)
     },
     onRefresh () {
       // 刷新页面
       this.refreshLoading = true
-      this.loadCluster('cluster', this.pageSize, this.page)
+      this.loadCluster(this.pageSize, this.page)
     },
     deleteClusterConfig (clusterConfigId) {
       deleteCluster({
-        address: clusterConfigId
-      }).then(res => {
+        config_id: clusterConfigId
+      }).then(_ => {
         // 成功
         this.$notify({
           duration: 700,
@@ -204,8 +207,8 @@ export default {
           message: '删除' + clusterConfigId,
           type: 'success'
         })
-        // 操作成功，刷新页面
-        this.loadCluster('cluster')
+        // 删除操作成功，刷新页面
+        this.loadCluster(this.pageSize, this.currentPage)
       }).catch(err => {
         // 失败
         this.$notify({
@@ -215,14 +218,14 @@ export default {
         })
       })
     },
-    onDeleteClusterConfig (cconfigId) {
+    onDeleteClusterConfig (configId) {
       this.$confirm('此操作将永久删除该集群配置, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         // 确定
-        this.deleteClusterConfig(cconfigId)
+        this.deleteClusterConfig(configId)
       }).catch(() => {
         this.$notify.info({
           duration: 700,
