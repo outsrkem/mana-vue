@@ -133,7 +133,7 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.loadCluster('cluster')
+    this.loadCluster(this.pageSize)
   },
   mounted () {
   },

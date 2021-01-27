@@ -174,7 +174,7 @@ export default {
       workingLoad: [],
       pageTotal: 0,
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
     }
   },
   computed: {},
@@ -200,9 +200,9 @@ export default {
       }).then(res => {
         const result = res.data
         // 如果有一个集群，则默认为第一个集群
-        this.clusterId = result.response.items[0].server
+        this.clusterId = result.response.items[0].id
         const clusters = result.response.items.map(items => ({
-          clusterId: items.server,
+          clusterId: items.id,
           clusterLabel: items.server
         }))
         this.clusters = clusters
@@ -222,15 +222,20 @@ export default {
         this.namespaces = namespaces
       })
     },
-    loadWorkingLoad (pageSize = 10, page = 1) {
-      getWorkingLoad({
-        pageSize: pageSize,
-        page: page,
-        address: this.clusterId,
-        namespaces: this.ns,
-        control: this.control,
-        type: 'workingload'
-      }).then(res => {
+    loadWorkingLoad () {
+      // 定义请求参数，params
+      const params = {
+        pageSize: this.pageSize,
+        page: this.page
+      }
+      // 定义请求参数，路径参数
+      const paths = {
+        clusterId: this.clusterId,
+        namespaces: 'kube-system',
+        control: this.control
+      }
+      // 请求
+      getWorkingLoad(paths, params).then(res => {
         const { total: pageTotal } = res.data.response.pageInfo
         this.workingLoad = res.data.response.items
         // this.pageTotal = pageTotal

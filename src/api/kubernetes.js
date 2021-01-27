@@ -36,11 +36,13 @@ export const getNameSpaces = params => {
 }
 
 // 获取负载列表
-export const getWorkingLoad = params => {
+// paths 传递路径参数
+// parameter 传递 params 参数
+export const getWorkingLoad = (paths, parameter) => {
   return request({
     method: 'GET',
-    url: '/api/v1/common/kubernetes/cluster',
-    params
+    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.namespaces}/${paths.control}`,
+    params: parameter
   })
 }
 
