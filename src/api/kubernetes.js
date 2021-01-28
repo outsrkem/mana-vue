@@ -38,11 +38,12 @@ export const getNameSpaces = (paths, parameter) => {
 // 获取负载列表
 // paths 传递路径参数
 // parameter 传递 params 参数
+// https://10.10.10.10/api/v1/common/kubernetes/cluster/66/control/kube-system/deployments
 export const getWorkingLoad = (paths, parameter) => {
   return request({
     method: 'GET',
-    // url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.namespaces}/${paths.control}`,
-    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.control}`,
+    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/control/${paths.namespaces}/${paths.control}`,
+    // url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.control}`,
     params: parameter
   })
 }

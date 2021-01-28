@@ -16,7 +16,7 @@
           <el-select
             size="small"
             v-model="clusterId"
-            @change="onNameSpaces('namespaces')"
+            @change="onClusterIdChange()"
             filterable
             placeholder="请选择"
           >
@@ -31,6 +31,7 @@
           <el-select
             size="small"
             v-model="ns"
+            @change="onNamespacesIdChange()"
             filterable
             placeholder="请选择"
             style="margin-left: 20px;"
@@ -111,14 +112,6 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="image"
-          label="image">
-        </el-table-column>
-        <el-table-column
-          prop="imageversion"
-          label="VERSION">
-        </el-table-column>
-        <el-table-column
           prop="creationTimestamp"
           label="CREATIONTIME">
         </el-table-column>
@@ -161,10 +154,7 @@ export default {
     return {
       clusters: [],
       clusterId: null,
-      namespaces: [{
-        nsLabel: 'asdasd',
-        ns: 'aaa'
-      }],
+      namespaces: [],
       ns: 'kube-system',
       controls: [{
         controlValue: 'deployments',
@@ -198,6 +188,8 @@ export default {
         this.clusterId = result.response.items[0].id
         // 首次加载负载
         this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.ns, this.control)
+        // 首次加载名称空间
+        this.loadNamespaces(this.clusterId)
         this.clusters = result.response.items.map(items => ({
           clusterId: items.id,
           clusterLabel: items.server
@@ -206,12 +198,10 @@ export default {
       })
     },
     // 加载名称空间
-    loadNamespaces (type, clusterId) {
+    loadNamespaces (clusterId) {
       // 获取集群的名称空间
       getNameSpaces({ clusterId: clusterId },
-        {
-          k8s_link: '/api/v1/namespaces'
-        }).then(res => {
+        {}).then(res => {
         const result = res.data
         this.namespaces = result.response.items.map(items => ({
           ns: items,
@@ -226,12 +216,12 @@ export default {
       // 定义请求参数，params
       const params = {
         pageSize: pageSize,
-        page: page,
-        k8s_link: '/apis/apps/v1/namespaces/' + namespaces + '/' + control
+        page: page
       }
       // 定义请求参数，路径参数
       const paths = {
         clusterId: clusterId,
+        namespaces: namespaces,
         control: control
       }
       // 请求
@@ -257,9 +247,13 @@ export default {
       // 刷新页面
       this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.ns, this.control)
     },
-    onNameSpaces (type) {
-      // 加载集群名称空间
-      this.loadNamespaces(type, this.clusterId)
+    // 集群切换加载集群名称空间
+    onClusterIdChange () {
+      this.loadNamespaces(this.clusterId)
+      this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
+    },
+    // 名称空间切换加载负载列表
+    onNamespacesIdChange () {
       this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
     }
   }
