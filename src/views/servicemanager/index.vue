@@ -161,14 +161,17 @@ export default {
     return {
       clusters: [],
       clusterId: null,
-      namespaces: 'kube-system',
+      namespaces: [{
+        nsLabel: 'asdasd',
+        ns: 'aaa'
+      }],
       ns: 'kube-system',
       controls: [{
         controlValue: 'deployments',
         controlLabel: 'deployments'
       }, {
-        controlValue: 'daemondset',
-        controlLabel: 'daemondset'
+        controlValue: 'daemonset',
+        controlLabel: 'daemonset'
       }],
       control: 'deployments',
       workingLoad: [],
@@ -194,7 +197,7 @@ export default {
         // 如果有一个集群，则默认为第一个集群
         this.clusterId = result.response.items[0].id
         // 首次加载负载
-        this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.namespaces, this.control)
+        this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.ns, this.control)
         this.clusters = result.response.items.map(items => ({
           clusterId: items.id,
           clusterLabel: items.server
@@ -205,14 +208,15 @@ export default {
     // 加载名称空间
     loadNamespaces (type, clusterId) {
       // 获取集群的名称空间
-      getNameSpaces({
-        type: type,
-        address: clusterId
-      }).then(res => {
+      getNameSpaces({ clusterId: clusterId },
+        {
+          k8s_link: '/api/v1/namespaces'
+        }).then(res => {
         const result = res.data
         this.namespaces = result.response.items.map(items => ({
-          ns: items.ns,
-          nsLabel: items.ns
+          ns: items,
+          nsLabel: items
+
         }))
         // this.namespaces = namespaces
       })
@@ -222,12 +226,12 @@ export default {
       // 定义请求参数，params
       const params = {
         pageSize: pageSize,
-        page: page
+        page: page,
+        k8s_link: '/apis/apps/v1/namespaces/' + namespaces + '/' + control
       }
       // 定义请求参数，路径参数
       const paths = {
         clusterId: clusterId,
-        namespaces: namespaces,
         control: control
       }
       // 请求
@@ -242,7 +246,7 @@ export default {
     onCurrentChange (page) {
       this.page = page
       const pageSize = this.pageSize
-      this.loadWorkingLoad(pageSize, page, this.clusterId, this.namespaces, this.control)
+      this.loadWorkingLoad(pageSize, page, this.clusterId, this.ns, this.control)
     },
     onSizeChange (pageSize) {
       this.pageSize = pageSize
@@ -251,12 +255,12 @@ export default {
     },
     onRefresh () {
       // 刷新页面
-      this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.namespaces, this.control)
+      this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.ns, this.control)
     },
     onNameSpaces (type) {
       // 加载集群名称空间
       this.loadNamespaces(type, this.clusterId)
-      this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.namespaces, this.control)
+      this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
     }
   }
 }

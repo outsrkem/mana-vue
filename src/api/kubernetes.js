@@ -27,11 +27,11 @@ export const getCluster = params => {
 
 // 获取集群名称空间
 // /api/v1/common/kubernetes/cluster?cluster=123&type=namespaces
-export const getNameSpaces = params => {
+export const getNameSpaces = (paths, parameter) => {
   return request({
     method: 'GET',
-    url: '/api/v1/common/kubernetes/cluster',
-    params
+    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/namespaces`,
+    params: parameter
   })
 }
 
@@ -41,7 +41,8 @@ export const getNameSpaces = params => {
 export const getWorkingLoad = (paths, parameter) => {
   return request({
     method: 'GET',
-    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.namespaces}/${paths.control}`,
+    // url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.namespaces}/${paths.control}`,
+    url: `/api/v1/common/kubernetes/cluster/${paths.clusterId}/${paths.control}`,
     params: parameter
   })
 }
