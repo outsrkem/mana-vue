@@ -161,7 +161,7 @@ export default {
     return {
       clusters: [],
       clusterId: null,
-      namespaces: [],
+      namespaces: 'kube-system',
       ns: 'kube-system',
       controls: [{
         controlValue: 'deployments',
@@ -180,14 +180,9 @@ export default {
   computed: {},
   watch: {},
   created () {
-    // 加载集群列表信息，用于筛选集群获取负载
-    // this.loadCluster('cluster')
-    // 加载工作负载
-    // this.loadWorkingLoad(this.pageSize, this.page)
   },
   mounted () {
     this.loadCluster()
-    this.loadWorkingLoad(this.pageSize, this.page)
   },
   methods: {
     loadCluster (type) {
@@ -198,6 +193,8 @@ export default {
         const result = res.data
         // 如果有一个集群，则默认为第一个集群
         this.clusterId = result.response.items[0].id
+        // 首次加载负载
+        this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.namespaces, this.control)
         this.clusters = result.response.items.map(items => ({
           clusterId: items.id,
           clusterLabel: items.server
@@ -205,6 +202,7 @@ export default {
         // this.clusters = clusters
       })
     },
+    // 加载名称空间
     loadNamespaces (type, clusterId) {
       // 获取集群的名称空间
       getNameSpaces({
@@ -219,17 +217,18 @@ export default {
         // this.namespaces = namespaces
       })
     },
-    loadWorkingLoad () {
+    // 加载工作负载
+    loadWorkingLoad (pageSize, page, clusterId, namespaces = 'kube-system', control) {
       // 定义请求参数，params
       const params = {
-        pageSize: this.pageSize,
-        page: this.page
+        pageSize: pageSize,
+        page: page
       }
       // 定义请求参数，路径参数
       const paths = {
-        clusterId: this.clusterId,
-        namespaces: 'kube-system',
-        control: this.control
+        clusterId: clusterId,
+        namespaces: namespaces,
+        control: control
       }
       // 请求
       getWorkingLoad(paths, params).then(res => {
@@ -243,7 +242,7 @@ export default {
     onCurrentChange (page) {
       this.page = page
       const pageSize = this.pageSize
-      this.loadWorkingLoad(pageSize, page)
+      this.loadWorkingLoad(pageSize, page, this.clusterId, this.namespaces, this.control)
     },
     onSizeChange (pageSize) {
       this.pageSize = pageSize
@@ -252,12 +251,12 @@ export default {
     },
     onRefresh () {
       // 刷新页面
-      this.loadWorkingLoad(this.pageSize, this.page)
+      this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.namespaces, this.control)
     },
     onNameSpaces (type) {
       // 加载集群名称空间
       this.loadNamespaces(type, this.clusterId)
-      this.loadWorkingLoad()
+      this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.namespaces, this.control)
     }
   }
 }
