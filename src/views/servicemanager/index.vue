@@ -174,7 +174,7 @@ export default {
       workingLoad: [],
       pageTotal: 0,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     }
   },
   computed: {},
@@ -183,16 +183,13 @@ export default {
     // 加载集群列表信息，用于筛选集群获取负载
     // this.loadCluster('cluster')
     // 加载工作负载
-    this.loadWorkingInfo()
+    // this.loadWorkingLoad(this.pageSize, this.page)
   },
   mounted () {
+    this.loadCluster()
+    this.loadWorkingLoad(this.pageSize, this.page)
   },
   methods: {
-    // 处理先加载集群信息，后加载工作复杂
-    async loadWorkingInfo () {
-      await this.loadCluster('cluster')
-      this.loadWorkingLoad()
-    },
     loadCluster (type) {
       // 获取取群列表
       getCluster({
@@ -201,11 +198,11 @@ export default {
         const result = res.data
         // 如果有一个集群，则默认为第一个集群
         this.clusterId = result.response.items[0].id
-        const clusters = result.response.items.map(items => ({
+        this.clusters = result.response.items.map(items => ({
           clusterId: items.id,
           clusterLabel: items.server
         }))
-        this.clusters = clusters
+        // this.clusters = clusters
       })
     },
     loadNamespaces (type, clusterId) {
@@ -215,11 +212,11 @@ export default {
         address: clusterId
       }).then(res => {
         const result = res.data
-        const namespaces = result.response.items.map(items => ({
+        this.namespaces = result.response.items.map(items => ({
           ns: items.ns,
           nsLabel: items.ns
         }))
-        this.namespaces = namespaces
+        // this.namespaces = namespaces
       })
     },
     loadWorkingLoad () {
