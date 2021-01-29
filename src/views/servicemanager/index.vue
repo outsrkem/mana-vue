@@ -47,6 +47,7 @@
           <el-select
             size="small"
             v-model="control"
+            @change="onControlsChange()"
             filterable
             placeholder="请选择"
             style="margin-left: 20px;"
@@ -246,14 +247,19 @@ export default {
     onRefresh () {
       // 刷新页面
       this.loadWorkingLoad(this.pageSize, this.page, this.clusterId, this.ns, this.control)
+      this.loadNamespaces(this.clusterId)
     },
     // 集群切换加载集群名称空间
     onClusterIdChange () {
-      this.loadNamespaces(this.clusterId)
       this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
+      this.loadNamespaces(this.clusterId)
     },
     // 名称空间切换加载负载列表
     onNamespacesIdChange () {
+      this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
+    },
+    // 控制器切换加载负载列表
+    onControlsChange () {
       this.loadWorkingLoad(this.pageSize, 1, this.clusterId, this.ns, this.control)
     }
   }
