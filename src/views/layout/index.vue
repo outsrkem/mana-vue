@@ -64,7 +64,11 @@ export default {
     // 要注册事件
     globalBus.$on('update-user', (data) => {
       // console.log('update-user', data)
-      this.user = data
+      // 对象之间是引用数据类型，导致$emit中修改后，这边也变化
+      // this.user = data
+      // 使用普通数据就不会相互影响
+      // this.user.nickname = data.nickname
+      this.user.nickname = data.nickname
     })
   },
   mounted () {

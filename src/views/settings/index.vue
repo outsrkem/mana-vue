@@ -36,7 +36,7 @@
             <el-form-item>
               <el-button
                 type="primary"
-                @click="onUpdataUserInfo"
+                @click="onUpdateUserInfo"
               >保存修改
               </el-button>
             </el-form-item>
@@ -88,7 +88,7 @@ export default {
       // 刷新页面
       this.loadUserInfo()
     },
-    onUpdataUserInfo () {
+    onUpdateUserInfo () {
       // console.log('onUpdateUserInfo')
       globalBus.$emit('update-user', this.user)
     }
