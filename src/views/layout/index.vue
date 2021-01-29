@@ -15,7 +15,7 @@
         <el-dropdown>
           <div class="avatar-wrap">
             <img class="avatar" src="" alt="">
-            <span>{{ user.username }}</span>
+            <span>{{ user.nickname }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -42,6 +42,7 @@
 <script>
 import AppAside from './components/aside'
 import { getUserInfo } from '@/api/user.js'
+import globalBus from '@/utils/global-bus'
 
 export default {
   name: 'LayoutIndex',
@@ -59,6 +60,12 @@ export default {
   created () {
     // 组件初始化好，请求获取用户资料
     this.loadUserInfo()
+
+    // 要注册事件
+    globalBus.$on('update-user', (data) => {
+      // console.log('update-user', data)
+      this.user = data
+    })
   },
   mounted () {
   },

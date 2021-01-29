@@ -24,6 +24,9 @@
           <el-form ref="form" :model="user" label-width="100px">
             <el-form-item label="用户名称：">{{ user.username }}
             </el-form-item>
+            <el-form-item label="用户昵称：">
+              <el-input v-model="user.nickname"></el-input>
+            </el-form-item>
             <el-form-item label="个人邮箱：">{{ user.email }}
             </el-form-item>
             <el-form-item label="联系电话：">{{ user.mobile }}
@@ -31,7 +34,11 @@
             <el-form-item label="个人描述：">{{ user.describes }}
             </el-form-item>
             <el-form-item>
-              <el-button type="primary">修改</el-button>
+              <el-button
+                type="primary"
+                @click="onUpdataUserInfo"
+              >保存修改
+              </el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -44,6 +51,7 @@
 
 <script>
 import { getUserInfo } from '@/api/user'
+import globalBus from '@/utils/global-bus'
 
 export default {
 
@@ -79,6 +87,10 @@ export default {
     onRefresh () {
       // 刷新页面
       this.loadUserInfo()
+    },
+    onUpdataUserInfo () {
+      // console.log('onUpdateUserInfo')
+      globalBus.$emit('update-user', this.user)
     }
   }
 }
