@@ -31,10 +31,6 @@
         <el-table-column
           label="序号"
           width="180">
-          <!--
-          slot-scope 可以获取当前表格的数据
-          https://element.eleme.cn/#/zh-CN/component/table
-          -->
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -48,12 +44,21 @@
           label="地址"
           prop="content"
         >
-          <!--          <template scope="scope">-->
-          <!--            <a :href="scope.row.content" target="_blank" style="text-decoration:none;">{{ scope.row.content }}</a>-->
-          <!--          </template>-->
+          <!--
+            添加link跳转
+            添加link跳转
+            target="_blank" 会打开新的标签页
+          -->
+          <template slot-scope="scope">
+            <el-link
+            :href="scope.row.content"
+            target="_blank"
+            type="primary"
+            >{{scope.row.content}}</el-link>
+          </template>
         </el-table-column>
       </el-table>
-      <!--/表格开始-->
+      <!--/表格结束-->
       <!--Pagination 分页-->
       <!--
       :current-page.sync="currentPage"  当前页码
