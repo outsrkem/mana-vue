@@ -103,16 +103,11 @@ export default {
   mounted () {
   },
   methods: {
-    loadNavigationLinks (pageSize = 10, page = 1) {
-      getLink({
-        pageSize: pageSize,
-        page: page
-      }).then(res => {
+    loadNavigationLinks () {
+      getLink().then(res => {
         // console.log(res)
         // const { items } = res.data.response
-        const { total: pageTotal } = res.data.response.pageInfo
         this.tableData = res.data.response.items
-        this.pageTotal = pageTotal
       })
     },
     onCurrentChange (page) {
