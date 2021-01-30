@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import cookie from 'js-cookie'
 // 在 VueCLI 创建的项目中 @ 表示 src 目录
 // 它是 src 目录的路径别名
 // 好处：它不受当前文件路径影响
@@ -83,10 +84,11 @@ router.beforeEach((to, from, next) => {
   // 如果登录了，则允许通过
   // 允许通过
   // next()
-  const user = JSON.parse(window.localStorage.getItem('user'))
+  // const user = JSON.parse(window.localStorage.getItem('user'))
+  const token = cookie.get('authentication-token')
   // 校验非登录页面的登录状态
   if (to.path !== '/login') {
-    if (user) {
+    if (token) {
       // 已登录，允许通过
       next()
     } else {

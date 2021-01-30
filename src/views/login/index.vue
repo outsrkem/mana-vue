@@ -76,8 +76,12 @@ export default {
       // 这样做的好处就是：管理维护更方便，也好重用
       login(this.user).then(res => {
         // 登录成功
-        // 保存信息
-        window.localStorage.setItem('user', JSON.stringify(res.data.response))
+        const response = res.data.response
+        // 保存信息到cookies，浏览器关闭后删除
+        this.$cookies.set('authentication-token', response.token, '0')
+        this.$cookies.set('userid', response.userid, '0')
+        this.$cookies.set('nickname', response.nickname, '0')
+
         // 跳转到首页
         // this.$router.push('/')
         this.$router.push({
