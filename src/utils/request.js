@@ -3,6 +3,11 @@
  */
 import axios from 'axios'
 import cookie from 'js-cookie'
+import router from '@/router'
+
+// 非组件模块可以这样加载使用 element 的 message 提示组件
+import { Message } from 'element-ui'
+
 // axios()
 // axios.get()
 // axios.post()
@@ -36,6 +41,34 @@ request.interceptors.request.use(
   }
 )
 // 响应拦截器
+request.interceptors.response.use(function (response) {
+  // response 是响应处理
+  // 注意：一定要把响应结果 return，否则真正发请求的位置拿不到数据
+  // 所有响应码为2xx 都会经过这里
+  return response
+}, function (error) {
+  // 所有响应码为4xx 都会经过这里
+  const { status } = error.response
+  if (status === 401) {
+    // 跳转到登录页面
+    // 清除本地存储中的用户登录状态
+    cookie.remove('authentication-token')
+    router.push('/login')
+    Message.error('登录状态无效，请重新登录')
+  } else if (status === 403) {
+    // token 未携带或已过期
+    Message({
+      type: 'warning',
+      message: '没有操作权限'
+    })
+  } else if (status === 400) {
+    // 客户端参数错误
+    Message.error('参数错误，请检查请求参数')
+  } else if (status >= 500) {
+    Message.error('服务端内部异常，请稍后重试')
+  }
+  return Promise.reject(error)
+})
 
 // 导出请求方法
 export default request
