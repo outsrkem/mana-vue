@@ -2,7 +2,7 @@
  * 用户相关请求模块
  */
 import request from '@/utils/request'
-
+import cookie from 'js-cookie'
 // 用户登录
 // /api/v1/common/users/login
 export const login = data => {
@@ -18,7 +18,8 @@ export const login = data => {
 // 获取用户信息
 // /api/v1/common/users/123
 export const getUserInfo = () => {
-  const user = JSON.parse(window.localStorage.getItem('user'))
+  const token = cookie.get('userid')
+  // const user = JSON.parse(window.localStorage.getItem('user'))
   // console.log(user)
   return request({
     method: 'GET',
@@ -27,7 +28,7 @@ export const getUserInfo = () => {
         'Content-Type': 'application/json;charset=utf-8'
         // 'X-Auth-Token': `${user.token}`
       },
-    url: `/api/v1/common/user/userinfo/${user.userid}`
+    url: `/api/v1/common/user/userinfo/${token}`
   })
 }
 
