@@ -1,84 +1,20 @@
 <template>
   <div>
-    <!--
-    Card 卡片
-    将信息聚合在卡片容器中展示。
-    -->
     <el-card class="box-card">
-      <div slot="header" class="clearfix my_refresh">
-        <!--面包屑导航-->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>导航链接</el-breadcrumb-item>
-        </el-breadcrumb>
-        <!--/面包屑导航-->
-        <!--刷新按钮-->
-        <el-row>
-          <el-button
-            size="small"
-            icon="el-icon-refresh"
-            @click="myRefreshLinks">
-          </el-button>
-        </el-row>
-        <!--/刷新按钮-->
-      </div>
-      <!--表格开始-->
-      <el-table
-        size="medium"
-        :data="tableData"
-        style="width: 100%"
-        class="filter-card">
-        <el-table-column
-          label="序号"
-          width="180">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          label="地址"
-          prop="content"
-        >
-          <!--
-            添加link跳转
-            添加link跳转
-            target="_blank" 会打开新的标签页
-          -->
-          <template slot-scope="scope">
-            <el-link
-            :href="scope.row.content"
-            target="_blank"
-            type="primary"
-            >{{scope.row.content}}</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--/表格结束-->
-      <!--Pagination 分页-->
       <!--
-      :current-page.sync="currentPage"  当前页码
-      @size-change="onSizeChange" 页码大小改变触发事件
-      :total="pageTotal" 总条数
-      layout="sizes, prev, pager, next" 其中sizes是显示选择多少条为一页
+      Card 卡片
+      将信息聚合在卡片容器中展示。
       -->
-      <el-pagination
-        @current-change="onCurrentChange"
-        @size-change="onSizeChange"
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="pageSize"
-        background
-        layout="sizes, prev, pager, next"
-        :total="pageTotal"
-        :current-page.sync="currentPage"
-        :pager-count="11"
-      >
-      </el-pagination>
-      <!--/Pagination 分页-->
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="导航链接" name="1"></el-tab-pane>
+        <el-tab-pane label="链接编辑" name="2"></el-tab-pane>
+        <el-tab-pane label="添加链接" name="3"></el-tab-pane>
+      </el-tabs>
+      <div class="tab-content">
+        <keep-alive>
+          <component :is="curComponents[activeName]" :links="links"></component>
+        </keep-alive>
+      </div>
     </el-card>
 
   </div>
@@ -86,47 +22,64 @@
 
 <script>
 import { getLink } from '@/api/navigation'
+import Links from './content/links.vue'
+import Edit from './content/edit.vue'
+import LinkAdd from './content/linkAdd.vue'
 
 export default {
-  name: 'NavigationIndex',
+  name: 'Navigation',
   data () {
     return {
-      tableData: [{
+      links: [{
         name: '百度',
         content: 'https://www.baidu.com'
       }],
       pageTotal: 0,
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      activeName: '',
+      curComponents: {
+        1: 'Links',
+        2: 'Edit',
+        3: 'LinkAdd'
+      }
     }
   },
   computed: {},
-  watch: {},
+  components: {
+    Links,
+    Edit,
+    LinkAdd
+  },
+  watch: {
+    '$route.query': {
+      handler (newval, oldval) {
+        this.activeName = newval.type
+      },
+      immediate: true
+    }
+  },
   created () {
     this.loadNavigationLinks()
+    this.activeName = this.$route.query.type || '1'
   },
   mounted () {
   },
   methods: {
     loadNavigationLinks () {
       getLink().then(res => {
-        // console.log(res)
-        // const { items } = res.data.response
-        this.tableData = res.data.response.items
+        this.links = res.data.response.items
       })
     },
-    onCurrentChange (page) {
-      // console.log(page)
-      this.page = page
-      const pageSize = this.pageSize
-      this.loadNavigationLinks(pageSize, page)
+    // 切换tabs
+    handleClick (tab) {
+      this.activeName = tab.name
+      this.$router.push({
+        path: '/navigation',
+        query: { type: this.activeName }
+      })
     },
-    onSizeChange (pageSize) {
-      // console.log(pageSize)
-      this.pageSize = pageSize
-      this.currentPage = 1
-      this.loadNavigationLinks(pageSize, 1)
-    },
+
     myRefreshLinks () {
       // 刷新页面
       // console.log('刷新')

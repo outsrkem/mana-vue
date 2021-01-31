@@ -18,6 +18,13 @@ import Cluster from '@/views/kubernetes/cluster/index'
 
 Vue.use(VueRouter)
 
+// 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
+// Uncaught (in promise) NavigationDuplicated: Avoided redundant navigation to current location: "/navigation?type=2".
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 // 路由配置表
 const routes = [
   {
