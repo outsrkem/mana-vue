@@ -51,51 +51,58 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="dialogVisible = true">编辑
+            @click="onHandleEdit(scope.row.id)">编辑
           </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="onHandleDelete(scope.$index, scope.row)">删除
+            @click="onHandleDelete(scope.row.id)">删除
           </el-button>
-          <el-dialog
-            title="编辑"
-            :visible.sync="dialogVisible"
-            width="40%"
-            append-to-body
-            :before-close="handleClose">
-            <el-form ref="form" :model="links" label-width="80px">
-              <el-form-item label="名称">
-                <el-input v-model="scope.row.name"></el-input>
-              </el-form-item>
-              <el-form-item label="地址">
-                <el-input v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="分类">
-                <el-select v-model="form.region" placeholder="请选择分类">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="是否启用">
-                <el-switch v-model="form.delivery"></el-switch>
-              </el-form-item>
-              <el-form-item label="链接简介">
-                <el-input type="textarea" v-model="form.desc"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button size="mini" type="primary" @click="onSubmit">提交</el-button>
-                <el-button size="mini" @click="handleClose">取消</el-button>
-              </el-form-item>
-            </el-form>
-          </el-dialog>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 编辑的dialog弹框 -->
+    <el-dialog
+      title="编辑"
+      :visible.sync="dialogVisible"
+      width="40%"
+      append-to-body
+      :before-close="handleClose">
+      <el-form ref="" :model="dialogEditForm" label-width="80px">
+        <el-form-item label="名称">
+          <el-input v-model="dialogEditForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input v-model="dialogEditForm.content"></el-input>
+        </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="value" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch v-model="activate"></el-switch>
+        </el-form-item>
+        <el-form-item label="链接简介">
+          <el-input type="textarea" v-model="dialogEditForm.describes"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="onSubmit">提交</el-button>
+          <el-button size="mini" @click="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- /编辑的dialog弹框 -->
   </div>
 </template>
 
 <script>
+import { getLink } from '@/api/navigation'
 
 export default {
   // 指定 name 选项的另一个好处是便于调试。
@@ -108,16 +115,25 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      activate: true,
+      dialogEditForm: {},
+      options: [{
+        value: '1',
+        label: '公共网址'
+      }, {
+        value: '2',
+        label: '监控网址'
+      }, {
+        value: '3',
+        label: '办公网址'
+      }, {
+        value: '4',
+        label: '业务网址'
+      }, {
+        value: '5',
+        label: '其他'
+      }],
+      value: null
     }
   },
   computed: {},
@@ -127,8 +143,18 @@ export default {
   mounted () {
   },
   methods: {
-    onHandleEdit (index, row) {
-      console.log(index, row)
+    loadNavigationLinks (id) {
+      const params = {
+        id: id
+      }
+      getLink(params).then(res => {
+        this.dialogEditForm = res.data.response
+        this.value = res.data.response.category
+      })
+    },
+    onHandleEdit (id) {
+      this.loadNavigationLinks(id)
+      this.dialogVisible = true
     },
     onHandleDelete (index, row) {
       console.log(index, row)
