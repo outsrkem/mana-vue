@@ -37,15 +37,15 @@
       </el-table-column>
       <el-table-column
         label="分类"
-        prop="content"
+        prop="category"
       />
       <el-table-column
         label="状态"
-        prop="content"
+        prop="activate"
       />
       <el-table-column
         label="更新时间"
-        prop="content"
+        prop="updateTime"
       />
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -144,10 +144,10 @@ export default {
   },
   methods: {
     loadNavigationLinks (id) {
-      const params = {
+      const paths = {
         id: id
       }
-      getLink(params).then(res => {
+      getLink(paths).then(res => {
         this.dialogEditForm = res.data.response
         this.value = res.data.response.category
       })

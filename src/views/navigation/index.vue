@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { getLink } from '@/api/navigation'
+import { getLinksAll } from '@/api/navigation'
 import Links from './content/links.vue'
 import Edit from './content/edit.vue'
 import LinkAdd from './content/linkAdd.vue'
@@ -67,7 +67,8 @@ export default {
   },
   methods: {
     loadNavigationLinks () {
-      getLink().then(res => {
+      // eslint-disable-next-line no-undef
+      getLinksAll().then(res => {
         this.links = res.data.response.items
       })
     },
