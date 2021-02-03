@@ -76,7 +76,7 @@
           <el-input v-model="dialogEditForm.content"></el-input>
         </el-form-item>
         <el-form-item label="分类">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="dialogEditForm.category" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -86,23 +86,44 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否启用">
-          <el-switch v-model="activate"></el-switch>
+          <el-switch
+            v-model="dialogEditForm.activate"
+            active-value="1"
+            inactive-value="0">
+          </el-switch>
         </el-form-item>
         <el-form-item label="链接简介">
           <el-input type="textarea" v-model="dialogEditForm.describes"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" type="primary" @click="onSubmit">提交</el-button>
+          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交</el-button>
           <el-button size="mini" @click="handleClose">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- /编辑的dialog弹框 -->
+    <!-- 删除的dialog弹框 -->
+    <el-dialog
+      title="提示，即将删除如下链接"
+      :visible.sync="dialogVisibleDelete"
+      width="30%"
+      append-to-body
+      :before-close="handleCloseDelete">
+        <div :v-model="dialogVisibleDelete" style="">
+          <p>名称: {{ dialogEditForm.name }}</p>
+          <p>链接: {{ dialogEditForm.content }}</p>
+        </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogVisibleDelete = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="onSubmitCommitDelete(dialogEditForm.id)">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- /删除的dialog弹框 -->
   </div>
 </template>
 
 <script>
-import { getLink } from '@/api/navigation'
+import { getLink, editLink, deleteLink } from '@/api/navigation'
 
 export default {
   // 指定 name 选项的另一个好处是便于调试。
@@ -115,7 +136,8 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      activate: true,
+      dialogVisibleDelete: false,
+      activeValue: null,
       dialogEditForm: {},
       options: [{
         value: '1',
@@ -132,8 +154,7 @@ export default {
       }, {
         value: '5',
         label: '其他'
-      }],
-      value: null
+      }]
     }
   },
   computed: {},
@@ -152,18 +173,78 @@ export default {
         this.value = res.data.response.category
       })
     },
+    // 提交修改
+    loadCommitChanges (id, formData) {
+      const paths = {
+        id: id
+      }
+      const data = {
+        name: formData.name,
+        url: formData.content,
+        activate: formData.activate,
+        category: formData.category,
+        describes: formData.describes
+      }
+      editLink(paths, data).then(res => {
+        // eslint-disable-next-line no-unused-vars
+        // 请求成功
+        this.$notify({
+          duration: 1000,
+          title: '修改链接成功',
+          type: 'success'
+        })
+      }).catch(err => {
+        // 请求失败
+        this.$notify({
+          title: '修改失败',
+          message: err,
+          type: 'error'
+        })
+      })
+    },
+    // 提交删除
+    loadDeleteLink (id) {
+      const paths = {
+        id: id
+      }
+      deleteLink(paths).then(res => {
+        this.$notify({
+          duration: 1000,
+          title: '删除成功',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$notify({
+          title: '删除失败',
+          message: err,
+          type: 'error'
+        })
+      })
+    },
     onHandleEdit (id) {
       this.loadNavigationLinks(id)
       this.dialogVisible = true
     },
-    onHandleDelete (index, row) {
-      console.log(index, row)
+    // 删除,需要处理请求成功后加载对话框
+    onHandleDelete (id) {
+      this.loadNavigationLinks(id)
+      this.dialogVisibleDelete = true
+    },
+    handleCloseDelete (done) {
+      this.dialogVisibleDelete = false
+    },
+    onSubmitCommitDelete (id) {
+      this.dialogVisibleDelete = false
+      this.loadDeleteLink(id)
     },
     handleClose (done) {
       this.dialogVisible = false
     },
-    onSubmit () {
-      console.log('submit!')
+    // 提交修改
+    onSubmitCommitChanges (id, formData) {
+      this.loadCommitChanges(id, formData)
+      // 关闭对话框
+      this.dialogVisible = false
     }
   }
 }

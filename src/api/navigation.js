@@ -23,3 +23,22 @@ export const getLink = paths => {
     // data 用来设置 POST 请求体, 是一个对象， 为json格式
   })
 }
+
+// 修改
+export const editLink = (paths, data) => {
+  return request({
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
+    url: `/api/v1/common/navigation/links/${paths.id}`,
+    data // data 用来设置 POST 请求体, 是一个对象， 为json格式
+  })
+}
+
+// 删除
+export const deleteLink = (paths) => {
+  return request({
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json;charset=utf-8"' },
+    url: `/api/v1/common/navigation/links/${paths.id}`
+  })
+}
