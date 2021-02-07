@@ -1,5 +1,52 @@
 <template>
+
   <div>
+    <div class="control-header">
+      <div>
+        <el-row>
+          <el-button size="small" type="primary"  @click="onAddNavigationLink">操作</el-button>
+        </el-row>
+      </div>
+      <div>
+        <el-row>
+          <el-select
+          v-model="categoryValue"
+          size="small"
+          style="margin-left: 20px;"
+          filterable clearable
+          placeholder="请选择">
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.categoryValue"
+              :label="item.label"
+              :value="item.categoryValue">
+            </el-option>
+          </el-select>
+          <el-select
+          v-model="activateValue"
+          size="small"
+          style="margin-left: 20px;"
+          filterable clearable
+          placeholder="请选择">
+            <el-option
+              v-for="item in activateOptions"
+              :key="item.activateValue"
+              :label="item.label"
+              :value="item.activateValue">
+            </el-option>
+          </el-select>
+          <!--刷新按钮-->
+          <el-button
+            size="small"
+            icon="el-icon-refresh"
+            style="margin-left: 20px;"
+            :loading="refreshLoading"
+            @click="onRefresh">
+          </el-button>
+          <!--/刷新按钮-->
+        </el-row>
+      </div>
+    </div>
     <el-table
       size="medium"
       :data="links"
@@ -15,10 +62,11 @@
       <el-table-column
         prop="name"
         label="名称"
-        width="100">
+        width="150">
       </el-table-column>
       <el-table-column
         label="地址"
+        width="450"
         prop="content"
       >
         <!--
@@ -38,11 +86,22 @@
       <el-table-column
         label="分类"
         prop="category"
-      />
+      >
+      <template slot-scope="scope">
+        <span :type="categoryOptions[scope.row.category - 1].categoryValue">{{ categoryOptions[scope.row.category -1].label }}</span>
+        <!-- <span v-if="scope.row.category === '1'">公共网址</span> -->
+      </template>
+      </el-table-column>
       <el-table-column
         label="状态"
         prop="activate"
-      />
+      >
+        <template slot-scope="scope">
+          <!-- <span :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</span> -->
+          <el-tag size="mini" :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</el-tag>
+          <!-- <span v-if="scope.row.category === '1'">公共网址</span> -->
+        </template>
+      </el-table-column>
       <el-table-column
         label="更新时间"
         prop="updateTime"
@@ -78,10 +137,10 @@
         <el-form-item label="分类">
           <el-select v-model="dialogEditForm.category" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="item in categoryOptions"
+              :key="item.categoryValue"
               :label="item.label"
-              :value="item.value">
+              :value="item.categoryValue">
             </el-option>
           </el-select>
         </el-form-item>
@@ -96,7 +155,8 @@
           <el-input type="textarea" v-model="dialogEditForm.describes"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交</el-button>
+          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交
+          </el-button>
           <el-button size="mini" @click="handleClose">取消</el-button>
         </el-form-item>
       </el-form>
@@ -109,10 +169,10 @@
       width="30%"
       append-to-body
       :before-close="handleCloseDelete">
-        <div :v-model="dialogVisibleDelete" style="">
-          <p>名称: {{ dialogEditForm.name }}</p>
-          <p>链接: {{ dialogEditForm.content }}</p>
-        </div>
+      <div :v-model="dialogVisibleDelete" style="">
+        <p>名称: {{ dialogEditForm.name }}</p>
+        <p>链接: {{ dialogEditForm.content }}</p>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogVisibleDelete = false">取 消</el-button>
         <el-button size="mini" type="primary" @click="onSubmitCommitDelete(dialogEditForm.id)">确 定</el-button>
@@ -123,7 +183,7 @@
 </template>
 
 <script>
-import { getLink, editLink, deleteLink } from '@/api/navigation'
+import { getLinksAll, getLink, editLink, deleteLink } from '@/api/navigation'
 
 export default {
   // 指定 name 选项的另一个好处是便于调试。
@@ -132,29 +192,43 @@ export default {
   // 结论：给一个组件起个名字是非常有意义的，尽量不要让组件的名字重复
   name: 'NavigationEdit',
   components: {},
-  props: ['links'],
   data () {
     return {
       dialogVisible: false,
       dialogVisibleDelete: false,
-      activeValue: null,
+      refreshLoading: false,
       dialogEditForm: {},
-      options: [{
-        value: '1',
+      links: [],
+      categoryOptions: [{
+        categoryValue: '1',
         label: '公共网址'
       }, {
-        value: '2',
+        categoryValue: '2',
         label: '监控网址'
       }, {
-        value: '3',
+        categoryValue: '3',
         label: '办公网址'
       }, {
-        value: '4',
+        categoryValue: '4',
         label: '业务网址'
       }, {
-        value: '5',
+        categoryValue: '5',
         label: '其他'
-      }]
+      }],
+      categoryValue: '',
+      activateOptions: [{
+        activateValue: '0',
+        label: '禁用',
+        type: 'danger'
+      }, {
+        activateValue: '1',
+        label: '启用',
+        type: 'success'
+      }],
+      activateValue: '',
+      formData: {
+        category: 1
+      }
     }
   },
   computed: {},
@@ -162,8 +236,19 @@ export default {
   created () {
   },
   mounted () {
+    this.loadNavigationLinksAll()
   },
   methods: {
+    loadNavigationLinksAll () {
+      // eslint-disable-next-line no-undef
+      getLinksAll().then(res => {
+        this.links = res.data.response.items
+        this.refreshLoading = false
+      }).catch(_ => {
+        // 刷新失败，也重置刷新按钮
+        this.refreshLoading = false
+      })
+    },
     loadNavigationLinks (id) {
       const paths = {
         id: id
@@ -193,6 +278,7 @@ export default {
           title: '修改链接成功',
           type: 'success'
         })
+        this.loadNavigationLinksAll()
       }).catch(err => {
         // 请求失败
         this.$notify({
@@ -213,6 +299,7 @@ export default {
           title: '删除成功',
           type: 'success'
         })
+        this.loadNavigationLinksAll()
       }).catch(err => {
         this.$notify({
           title: '删除失败',
@@ -245,10 +332,30 @@ export default {
       this.loadCommitChanges(id, formData)
       // 关闭对话框
       this.dialogVisible = false
+    },
+    onRefresh () {
+      // 刷新页面
+      this.refreshLoading = true
+      this.loadNavigationLinksAll()
+    },
+    onAddNavigationLink () {
+      this.$notify({
+        duration: 1000,
+        title: '暂无事件',
+        type: 'success'
+      })
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+.control-header {
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  background-color: #ffffff;
+}
 </style>
