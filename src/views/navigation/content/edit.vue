@@ -127,14 +127,14 @@
       width="40%"
       append-to-body
       :before-close="handleClose">
-      <el-form ref="" :model="dialogEditForm" label-width="80px">
-        <el-form-item label="名称">
+      <el-form ref="" :model="dialogEditForm" :rules="formRules" label-width="80px">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="dialogEditForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item label="地址" prop="content">
           <el-input v-model="dialogEditForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="分类">
+        <el-form-item label="分类" prop="category">
           <el-select v-model="dialogEditForm.category" placeholder="请选择">
             <el-option
               v-for="item in categoryOptions"
@@ -144,15 +144,16 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否启用">
+        <el-form-item label="是否启用" prop="activate">
           <el-switch
             v-model="dialogEditForm.activate"
             active-value="1"
             inactive-value="0">
           </el-switch>
         </el-form-item>
-        <el-form-item label="链接简介">
-          <el-input type="textarea" v-model="dialogEditForm.describes"></el-input>
+        <el-form-item label="链接简介" prop="describes">
+          <el-input v-model="dialogEditForm.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
+              show-word-limit :autosize="{minRows: 2, maxRows: 3}" :style="{width: '100%'}"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交
@@ -212,8 +213,26 @@ export default {
         { activateValue: '1', label: '启用', type: 'success' }
       ],
       activateValue: '',
-      formData: {
-        category: 1
+      // 编辑链接的表单验证
+      formRules: {
+        name: [
+          { required: true, message: '请输入链接名称', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'change' }
+        ],
+        content: [
+          { required: true, message: '请输入链接', trigger: 'blur' },
+          { pattern: /^https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]$/, message: 'URL 格式有误', trigger: 'change' }
+        ],
+        category: [
+          { required: true, message: '请选择类别', trigger: 'blur' }
+        ],
+        activate: [
+          { required: true, message: '请选择状态', trigger: 'blur' }
+        ],
+        describes: [
+          { required: true, message: '请输入链接描述', trigger: 'blur' },
+          { min: 2, max: 500, message: '长度在 2 到 500 个字符', trigger: 'change' }
+        ]
       }
     }
   },
