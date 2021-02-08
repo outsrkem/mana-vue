@@ -29,6 +29,7 @@
           <el-button
             class="login-btn"
             type="primary"
+            :loading="loginLoading"
             @click="onLogin"
           >登录
           </el-button>
@@ -48,6 +49,7 @@ export default {
   props: {},
   data () {
     return {
+      loginLoading: false, // 登录的 loading 状态
       user: {
         username: 'admin', // 手机号
         password: '123456' // 验证码
@@ -74,6 +76,7 @@ export default {
       // 2、实际工作中，接口非常容易变动，改起来麻烦
       // 我们建议的做法是把所有的请求都封装成函数然后统一的组织到模块中进行管理
       // 这样做的好处就是：管理维护更方便，也好重用
+      this.loginLoading = true
       login(this.user).then(res => {
         // 登录成功
         const response = res.data.response
@@ -84,12 +87,14 @@ export default {
 
         // 跳转到首页
         // this.$router.push('/')
+        this.loginLoading = false
         this.$router.push({
           // 这个 name 是路由的名字
           name: 'home'
         })
       }).catch(err => {
         console.log('登录失败', err)
+        this.loginLoading = false
         // 登录失败
       })
     }
