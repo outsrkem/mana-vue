@@ -14,7 +14,7 @@
           size="small"
           style="margin-left: 20px;"
           filterable clearable
-          placeholder="请选择">
+          placeholder="请选择类别">
             <el-option
               v-for="item in categoryOptions"
               :key="item.categoryValue"
@@ -27,7 +27,7 @@
           size="small"
           style="margin-left: 20px;"
           filterable clearable
-          placeholder="请选择">
+          placeholder="请选择禁启用">
             <el-option
               v-for="item in activateOptions"
               :key="item.activateValue"
