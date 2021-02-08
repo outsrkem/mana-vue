@@ -42,3 +42,11 @@ export const deleteLink = (paths) => {
     url: `/api/v1/common/navigation/links/${paths.id}`
   })
 }
+// 添加
+export const addLink = (data) => {
+  return request({
+    method: 'POST',
+    url: '/api/v1/common/navigation/links',
+    data
+  })
+}

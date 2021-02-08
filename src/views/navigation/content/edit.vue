@@ -199,32 +199,18 @@ export default {
       refreshLoading: false,
       dialogEditForm: {},
       links: [],
-      categoryOptions: [{
-        categoryValue: '1',
-        label: '公共网址'
-      }, {
-        categoryValue: '2',
-        label: '监控网址'
-      }, {
-        categoryValue: '3',
-        label: '办公网址'
-      }, {
-        categoryValue: '4',
-        label: '业务网址'
-      }, {
-        categoryValue: '5',
-        label: '其他'
-      }],
+      categoryOptions: [
+        { categoryValue: '1', label: '公共网址' },
+        { categoryValue: '2', label: '监控网址' },
+        { categoryValue: '3', label: '办公网址' },
+        { categoryValue: '4', label: '业务网址' },
+        { categoryValue: '5', label: '其他' }
+      ],
       categoryValue: '',
-      activateOptions: [{
-        activateValue: '0',
-        label: '禁用',
-        type: 'danger'
-      }, {
-        activateValue: '1',
-        label: '启用',
-        type: 'success'
-      }],
+      activateOptions: [
+        { activateValue: '0', label: '禁用', type: 'danger' },
+        { activateValue: '1', label: '启用', type: 'success' }
+      ],
       activateValue: '',
       formData: {
         category: 1
