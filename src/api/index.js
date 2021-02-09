@@ -6,7 +6,7 @@ import ajax from './ajax'
 // const BASE_URL = 'http://localhost:4000'
 const BASE_URL = '/api'
 
-export const test = () => ajax('/api/v1/common/user/userinfo/1610853130945803400')
+export const test = () => ajax('/api/v1/common/user/userinfo/89b8bd3386ab46c5a906bd4e3818bbca')
 
 // 1.获取地址信息(根据经纬度串)
 // 这个接口的经纬度参数是在url路径里的param参数，没有query参数
