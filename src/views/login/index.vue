@@ -8,11 +8,11 @@
       <div class="login-head">
         <div class="logo"></div>
       </div>
-      <el-form class="login-form" ref="form" :model="user">
-        <el-form-item>
+      <el-form class="login-form" ref="form" :model="user" :rules="formLoginRules">
+        <el-form-item prop="username">
           <el-input v-model="user.username" prefix-icon='el-icon-user' clearable placeholder="请输入登录名"/>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input v-model="user.password" prefix-icon='el-icon-lock' clearable show-password @keyup.enter.native="onLogin" placeholder="请输入密码"/>
         </el-form-item>
         <el-form-item>
@@ -41,7 +41,16 @@ export default {
         username: 'admin', // 登录名
         password: '123456' // 密码
       },
-      checked: true // 是否同意协议的选中状态
+      checked: true, // 是否同意协议的选中状态
+      // 表单验证规则配置
+      formLoginRules: {
+        username: [
+          { required: true, type: 'string', message: '请输入用户名', trigger: ['blur', 'change'] }
+        ],
+        password: [
+          { required: true, type: 'string', message: '请输入密码', trigger: ['blur', 'change'] }
+        ]
+      }
     }
   },
   computed: {},
