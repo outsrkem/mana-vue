@@ -13,20 +13,11 @@
           </el-form-item>
         <el-form-item label="分类" prop="category">
           <el-select v-model="formLinkData.category" placeholder="请选择" :style="{width: '100%'}">
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.categoryValue"
-              :label="item.label"
-              :value="item.categoryValue">
-            </el-option>
+            <el-option  v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否启用" prop="activate">
-          <el-switch
-            v-model="formLinkData.activate"
-            active-value="1"
-            inactive-value="0">
-          </el-switch>
+          <el-switch v-model="formLinkData.activate" active-value="1" inactive-value="0"/>
         </el-form-item>
           <el-form-item label="链接简介" prop="describes">
             <el-input v-model="formLinkData.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
@@ -129,7 +120,5 @@ export default {
     }
   }
 }
-
 </script>
-<style>
-</style>
+<style scoped lang="less"></style>

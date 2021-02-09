@@ -9,124 +9,59 @@
       </div>
       <div>
         <el-row>
-          <el-select
-          v-model="categoryValue"
-          size="small"
-          style="margin-left: 20px;"
-          filterable clearable
-          placeholder="请选择类别">
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.categoryValue"
-              :label="item.label"
-              :value="item.categoryValue">
-            </el-option>
+          <el-select v-model="categoryValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
+            <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
           </el-select>
-          <el-select
-          v-model="activateValue"
-          size="small"
-          style="margin-left: 20px;"
-          filterable clearable
-          placeholder="请选择禁启用">
-            <el-option
-              v-for="item in activateOptions"
-              :key="item.activateValue"
-              :label="item.label"
-              :value="item.activateValue">
-            </el-option>
+          <el-select v-model="activateValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
+            <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
           </el-select>
           <!--刷新按钮-->
-          <el-button
-            size="small"
-            icon="el-icon-refresh"
-            style="margin-left: 20px;"
-            :loading="refreshLoading"
-            @click="onRefresh">
-          </el-button>
+          <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" :loading="refreshLoading" @click="onRefresh"/>
           <!--/刷新按钮-->
         </el-row>
       </div>
     </div>
-    <el-table
-      size="medium"
-      :data="links"
-      style="width: 100%"
-      class="filter-card">
-      <el-table-column
-        label="序号"
-        width="50">
+    <el-table size="medium" :data="linksActivateFiltered" style="width: 100%" class="filter-card">
+      <el-table-column label="序号" width="50">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column
-        prop="name"
-        label="名称"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        label="地址"
-        width="450"
-        prop="content"
-      >
+      <el-table-column prop="name" label="名称" width="150"> </el-table-column>
+      <el-table-column label="地址" width="450" prop="content" :formatter="formatterContent" >
+        <template slot-scope="scope">
         <!--
           添加link跳转
           添加link跳转
           target="_blank" 会打开新的标签页
+          el-tooltip 鼠标放上去的标签
+          UrlSnippet 对较长的url截取
         -->
-        <template slot-scope="scope">
-          <el-link
-            :href="scope.row.content"
-            target="_blank"
-            type="primary"
-          >{{ scope.row.content }}
-          </el-link>
+          <el-tooltip class="item" effect="light" :content="scope.row.content" placement="right">
+            <el-link :href="scope.row.content" target="_blank" type="primary" >{{ scope.row.content | UrlSnippet}}</el-link>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column
-        label="分类"
-        prop="category"
-      >
-      <template slot-scope="scope">
-        <span :type="categoryOptions[scope.row.category - 1].categoryValue">{{ categoryOptions[scope.row.category -1].label }}</span>
-        <!-- <span v-if="scope.row.category === '1'">公共网址</span> -->
-      </template>
-      </el-table-column>
-      <el-table-column
-        label="状态"
-        prop="activate"
-      >
+      <el-table-column label="分类"  prop="category">
         <template slot-scope="scope">
-          <!-- <span :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</span> -->
+          <span :type="categoryOptions[scope.row.category - 1].categoryValue">{{ categoryOptions[scope.row.category -1].label }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" prop="activate">
+        <template slot-scope="scope">
           <el-tag size="mini" :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</el-tag>
-          <!-- <span v-if="scope.row.category === '1'">公共网址</span> -->
         </template>
       </el-table-column>
-      <el-table-column
-        label="更新时间"
-        prop="updateTime"
-      />
+      <el-table-column label="更新时间" prop="updateTime" />
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="onHandleEdit(scope.row.id)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="onHandleDelete(scope.row.id)">删除
-          </el-button>
+          <el-button size="mini" @click="onHandleEdit(scope.row.id)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="onHandleDelete(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 编辑的dialog弹框 -->
-    <el-dialog
-      title="编辑"
-      :visible.sync="dialogVisible"
-      width="40%"
-      append-to-body
-      :before-close="handleClose">
+    <el-dialog title="编辑" :visible.sync="dialogVisible" width="40%" append-to-body :before-close="handleClose">
       <el-form ref="" :model="dialogEditForm" :rules="formRules" label-width="80px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="dialogEditForm.name"></el-input>
@@ -136,40 +71,25 @@
         </el-form-item>
         <el-form-item label="分类" prop="category">
           <el-select v-model="dialogEditForm.category" placeholder="请选择">
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.categoryValue"
-              :label="item.label"
-              :value="item.categoryValue">
-            </el-option>
+            <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否启用" prop="activate">
-          <el-switch
-            v-model="dialogEditForm.activate"
-            active-value="1"
-            inactive-value="0">
-          </el-switch>
+          <el-switch v-model="dialogEditForm.activate" active-value="1" inactive-value="0"/>
         </el-form-item>
         <el-form-item label="链接简介" prop="describes">
           <el-input v-model="dialogEditForm.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
               show-word-limit :autosize="{minRows: 2, maxRows: 3}" :style="{width: '100%'}"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交
-          </el-button>
+          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交</el-button>
           <el-button size="mini" @click="handleClose">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- /编辑的dialog弹框 -->
     <!-- 删除的dialog弹框 -->
-    <el-dialog
-      title="提示，即将删除如下链接"
-      :visible.sync="dialogVisibleDelete"
-      width="30%"
-      append-to-body
-      :before-close="handleCloseDelete">
+    <el-dialog title="提示，即将删除如下链接" :visible.sync="dialogVisibleDelete" width="30%" append-to-body :before-close="handleCloseDelete">
       <div :v-model="dialogVisibleDelete" style="">
         <p>名称: {{ dialogEditForm.name }}</p>
         <p>链接: {{ dialogEditForm.content }}</p>
@@ -187,10 +107,12 @@
 import { getLinksAll, getLink, editLink, deleteLink } from '@/api/navigation'
 
 export default {
-  // 指定 name 选项的另一个好处是便于调试。
-  // 有名字的组件有更友好的警告信息。
-  // 另外，当在有 vue-devtools，未命名组件将显示成 <AnonymousComponent>，这很没有语义。通过提供 name 选项，可以获得更有语义信息的组件树。
-  // 结论：给一个组件起个名字是非常有意义的，尽量不要让组件的名字重复
+  /**
+   * 指定 name 选项的另一个好处是便于调试。
+   * 有名字的组件有更友好的警告信息。
+   * 另外，当在有 vue-devtools，未命名组件将显示成 <AnonymousComponent>，这很没有语义。通过提供 name 选项，可以获得更有语义信息的组件树。
+   * 结论：给一个组件起个名字是非常有意义的，尽量不要让组件的名字重复
+   */
   name: 'NavigationEdit',
   components: {},
   data () {
@@ -236,7 +158,30 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    // 按类别过滤
+    linksCategoryFiltered: function () {
+      return this.links.filter((links) => {
+        return links.category.match(this.categoryValue)
+      })
+    },
+    // 按激活状态过滤，使用按类别过滤后的数据在过滤，在model 中绑定 linksActivateFiltered 即可。
+    linksActivateFiltered: function () {
+      return this.linksCategoryFiltered.filter((linksCategoryFiltered) => {
+        return linksCategoryFiltered.activate.match(this.activateValue)
+      })
+    }
+  },
+  filters: {
+    // url snippet
+    UrlSnippet: function (value) {
+      const len = 45
+      if (value.length < len) {
+        return value
+      }
+      return value.slice(0, len) + '...'
+    }
+  },
   watch: {},
   created () {
   },
@@ -244,6 +189,14 @@ export default {
     this.loadNavigationLinksAll()
   },
   methods: {
+    // 表格参数格式化,暂未使用
+    formatterContent: function (row, column) {
+      return row.content.slice(0, 40) + '...'
+    },
+    // 状态参数格式化,暂未使用
+    formatterActivate: function (row, column) {
+      return row.sex === 1 ? '启用' : row.sex === 0 ? '禁用' : ''
+    },
     loadNavigationLinksAll () {
       // eslint-disable-next-line no-undef
       getLinksAll().then(res => {
