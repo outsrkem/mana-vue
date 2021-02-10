@@ -3,15 +3,21 @@
     el-menu-item 的 index 不能重复，确保唯一即可
     route 是开启路由模式
    -->
-  <el-menu :default-active="activePath" background-color="#002033" text-color="#fff" active-text-color="#ffd04b" router>
+  <el-menu :default-active="activePath" router unique-opened>
     <el-menu-item index="/" @click="onSaveNavState('/')">
       <i class="el-icon-setting"></i>
       <span slot="title">首页</span>
     </el-menu-item>
-    <el-menu-item index="/navigation" @click="onSaveNavState('/navigation')">
-      <i class="el-icon-link"></i>
-      <span slot="title">导航链接</span>
-    </el-menu-item>
+    <!-- 可折叠 -->
+    <el-submenu index="/link">
+      <template slot="title">
+        <i class="el-icon-link"></i>
+        <span>导航链接</span>
+      </template>
+        <el-menu-item index="/link/list" @click="onSaveNavState('/link/list')">链接浏览</el-menu-item>
+        <el-menu-item index="/link/edit" @click="onSaveNavState('/link/edit')">链接编辑</el-menu-item>
+        <el-menu-item index="/link/create" @click="onSaveNavState('/link/create')">添加链接</el-menu-item>
+    </el-submenu>
     <el-menu-item index="/hostmonitor" @click="onSaveNavState('/hostmonitor')">
       <i class="el-icon-stopwatch"></i>
       <span slot="title">主机监控</span>

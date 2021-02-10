@@ -1,105 +1,106 @@
 <template>
-
   <div>
-    <div class="control-header">
-      <div>
-        <el-row>
-          <el-button size="small" type="primary"  @click="onAddNavigationLink">操作</el-button>
-        </el-row>
-      </div>
-      <div>
-        <el-row>
-          <el-select v-model="categoryValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
-            <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
-          </el-select>
-          <el-select v-model="activateValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
-            <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
-          </el-select>
-          <!--刷新按钮-->
-          <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" :loading="refreshLoading" @click="onRefresh"/>
-          <!--/刷新按钮-->
-        </el-row>
-      </div>
-    </div>
-    <el-table size="medium" :data="linksActivateFiltered" style="width: 100%" class="filter-card">
-      <el-table-column label="序号" width="50">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-      <el-table-column label="地址" width="450" prop="content" :formatter="formatterContent" >
-        <template slot-scope="scope">
-        <!--
-          添加link跳转
-          添加link跳转
-          target="_blank" 会打开新的标签页
-          el-tooltip 鼠标放上去的标签
-          UrlSnippet 对较长的url截取
-        -->
-          <el-tooltip class="item" effect="light" :content="scope.row.content" placement="right">
-            <el-link :href="scope.row.content" target="_blank" type="primary" >{{ scope.row.content | UrlSnippet}}</el-link>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="分类"  prop="category">
-        <template slot-scope="scope">
-          <span :type="categoryOptions[scope.row.category - 1].categoryValue">{{ categoryOptions[scope.row.category -1].label }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" prop="activate">
-        <template slot-scope="scope">
-          <el-tag size="mini" :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" prop="updateTime" />
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="onHandleEdit(scope.row.id)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="onHandleDelete(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 编辑的dialog弹框 -->
-    <el-dialog title="编辑" :visible.sync="dialogVisible" width="40%" append-to-body :before-close="handleClose">
-      <el-form ref="" :model="dialogEditForm" :rules="formRules" label-width="80px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dialogEditForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" prop="content">
-          <el-input v-model="dialogEditForm.content"></el-input>
-        </el-form-item>
-        <el-form-item label="分类" prop="category">
-          <el-select v-model="dialogEditForm.category" placeholder="请选择">
-            <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否启用" prop="activate">
-          <el-switch v-model="dialogEditForm.activate" active-value="1" inactive-value="0"/>
-        </el-form-item>
-        <el-form-item label="链接简介" prop="describes">
-          <el-input v-model="dialogEditForm.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
-              show-word-limit :autosize="{minRows: 2, maxRows: 3}" :style="{width: '100%'}"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交</el-button>
-          <el-button size="mini" @click="handleClose">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!-- /编辑的dialog弹框 -->
-    <!-- 删除的dialog弹框 -->
-    <el-dialog title="提示，即将删除如下链接" :visible.sync="dialogVisibleDelete" width="30%" append-to-body :before-close="handleCloseDelete">
-      <div :v-model="dialogVisibleDelete" style="">
-        <p>名称: {{ dialogEditForm.name }}</p>
-        <p>链接: {{ dialogEditForm.content }}</p>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="dialogVisibleDelete = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="onSubmitCommitDelete(dialogEditForm.id)">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- /删除的dialog弹框 -->
+    <el-card class="box-card">
+        <div class="control-header">
+        <div>
+            <el-row>
+            <el-button size="small" type="primary"  @click="onAddNavigationLink">添加链接</el-button>
+            </el-row>
+        </div>
+        <div>
+            <el-row>
+            <el-select v-model="categoryValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
+                <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
+            </el-select>
+            <el-select v-model="activateValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
+                <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
+            </el-select>
+            <!--刷新按钮-->
+            <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" :loading="refreshLoading" @click="onRefresh"/>
+            <!--/刷新按钮-->
+            </el-row>
+        </div>
+        </div>
+        <el-table size="medium" :data="linksActivateFiltered" style="width: 100%" class="filter-card">
+        <el-table-column label="序号" width="50">
+            <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="name" label="名称" width="150"> </el-table-column>
+        <el-table-column label="地址" width="450" prop="content" :formatter="formatterContent" >
+            <template slot-scope="scope">
+            <!--
+            添加link跳转
+            添加link跳转
+            target="_blank" 会打开新的标签页
+            el-tooltip 鼠标放上去的标签
+            UrlSnippet 对较长的url截取
+            -->
+            <el-tooltip class="item" effect="light" :content="scope.row.content" placement="right">
+                <el-link :href="scope.row.content" target="_blank" type="primary" >{{ scope.row.content | UrlSnippet}}</el-link>
+            </el-tooltip>
+            </template>
+        </el-table-column>
+        <el-table-column label="分类"  prop="category">
+            <template slot-scope="scope">
+            <span :type="categoryOptions[scope.row.category - 1].categoryValue">{{ categoryOptions[scope.row.category -1].label }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="状态" prop="activate">
+            <template slot-scope="scope">
+            <el-tag size="mini" :type="activateOptions[scope.row.activate].type">{{ activateOptions[scope.row.activate].label }}</el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column label="更新时间" prop="updateTime" />
+        <el-table-column label="操作">
+            <template slot-scope="scope">
+            <el-button size="mini" @click="onHandleEdit(scope.row.id)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="onHandleDelete(scope.row.id)">删除</el-button>
+            </template>
+        </el-table-column>
+        </el-table>
+        <!-- 编辑的dialog弹框 -->
+        <el-dialog title="编辑" :visible.sync="dialogVisible" width="40%" append-to-body :before-close="handleClose">
+        <el-form ref="" :model="dialogEditForm" :rules="formRules" label-width="80px">
+            <el-form-item label="名称" prop="name">
+            <el-input v-model="dialogEditForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="地址" prop="content">
+            <el-input v-model="dialogEditForm.content"></el-input>
+            </el-form-item>
+            <el-form-item label="分类" prop="category">
+            <el-select v-model="dialogEditForm.category" placeholder="请选择">
+                <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
+            </el-select>
+            </el-form-item>
+            <el-form-item label="是否启用" prop="activate">
+            <el-switch v-model="dialogEditForm.activate" active-value="1" inactive-value="0"/>
+            </el-form-item>
+            <el-form-item label="链接简介" prop="describes">
+            <el-input v-model="dialogEditForm.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
+                show-word-limit :autosize="{minRows: 2, maxRows: 3}" :style="{width: '100%'}"></el-input>
+            </el-form-item>
+            <el-form-item>
+            <el-button size="mini" type="primary" @click="onSubmitCommitChanges(dialogEditForm.id, dialogEditForm)">提交</el-button>
+            <el-button size="mini" @click="handleClose">取消</el-button>
+            </el-form-item>
+        </el-form>
+        </el-dialog>
+        <!-- /编辑的dialog弹框 -->
+        <!-- 删除的dialog弹框 -->
+        <el-dialog title="提示，即将删除如下链接" :visible.sync="dialogVisibleDelete" width="30%" append-to-body :before-close="handleCloseDelete">
+        <div :v-model="dialogVisibleDelete" style="">
+            <p>名称: {{ dialogEditForm.name }}</p>
+            <p>链接: {{ dialogEditForm.content }}</p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="dialogVisibleDelete = false">取 消</el-button>
+            <el-button size="mini" type="primary" @click="onSubmitCommitDelete(dialogEditForm.id)">确 定</el-button>
+        </span>
+        </el-dialog>
+        <!-- /删除的dialog弹框 -->
+    </el-card>
   </div>
 </template>
 
@@ -297,11 +298,8 @@ export default {
       this.loadNavigationLinksAll()
     },
     onAddNavigationLink () {
-      this.$notify({
-        duration: 1000,
-        title: '暂无事件',
-        type: 'success'
-      })
+      this.$router.push('/link/create')
+      window.sessionStorage.setItem('active-path', '/link/create')
     }
   }
 }

@@ -1,37 +1,41 @@
 <template>
   <div>
-    <el-row :gutter="15">
-      <el-form ref="elForm" :model="formLinkData" :rules="formRules" size="medium" label-width="100px">
-        <el-col :span="8">
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="formLinkData.name" placeholder="请输入链接名称" clearable :style="{width: '100%'}">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="地址" prop="url">
-            <el-input v-model="formLinkData.url" placeholder="请输入链接" clearable :style="{width: '100%'}">
-            </el-input>
-          </el-form-item>
-        <el-form-item label="分类" prop="category">
-          <el-select v-model="formLinkData.category" placeholder="请选择" :style="{width: '100%'}">
-            <el-option  v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否启用" prop="activate">
-          <el-switch v-model="formLinkData.activate" active-value="1" inactive-value="0"/>
-        </el-form-item>
-          <el-form-item label="链接简介" prop="describes">
-            <el-input v-model="formLinkData.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
-              show-word-limit :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item size="mini">
-            <el-button type="primary" @click="onSubmitFormAddLink">提交</el-button>
-            <el-button @click="resetForm">重置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </el-row>
+    <el-card class="box-card">
+        <div>
+            <el-row :gutter="15">
+            <el-form ref="elForm" :model="formLinkData" :rules="formRules" size="medium" label-width="100px">
+                <el-col :span="8">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="formLinkData.name" placeholder="请输入链接名称" clearable :style="{width: '100%'}">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="url">
+                    <el-input v-model="formLinkData.url" placeholder="请输入链接" clearable :style="{width: '100%'}">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="分类" prop="category">
+                <el-select v-model="formLinkData.category" placeholder="请选择" :style="{width: '100%'}">
+                    <el-option  v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
+                </el-select>
+                </el-form-item>
+                <el-form-item label="是否启用" prop="activate">
+                <el-switch v-model="formLinkData.activate" active-value="1" inactive-value="0"/>
+                </el-form-item>
+                <el-form-item label="链接简介" prop="describes">
+                    <el-input v-model="formLinkData.describes" type="textarea" placeholder="请输入链接说明" :maxlength="500"
+                    show-word-limit :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+                </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                <el-form-item size="mini">
+                    <el-button type="primary" @click="onSubmitFormAddLink">提交</el-button>
+                    <el-button @click="resetForm">重置</el-button>
+                </el-form-item>
+                </el-col>
+            </el-form>
+            </el-row>
+        </div>
+    </el-card>
   </div>
 </template>
 <script>

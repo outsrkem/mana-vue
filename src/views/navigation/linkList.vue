@@ -1,25 +1,28 @@
 <template>
   <div>
-    <div class="link-category-container">
-      <el-row :gutter="20">
-        <el-col :span="24">
-          <div class="link-category">
-            <span>链接类型：</span>
-            <el-button type="text" @click="onCategoryValue()">全部</el-button>
-            <span v-for="(item, index) in categoryOptions" :key="index">
-              <el-button type="text" @click="onCategoryValue(index)">{{item}}</el-button>
-            </span>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="link-url-container" style="">
-        <el-row :gutter="20">
-          <el-col :span="3" v-for="(link,index) in linksCategoryFiltered" :key="index">
-            <el-link :href="link.content" target="_blank" type="primary">{{ link.name | nameSnippet }}</el-link>
-          </el-col>
-        </el-row>
-    </div>
+    <el-card class="box-card">
+        <div class="link-category-container">
+            <el-row :gutter="20">
+                <el-col :span="24">
+                <div class="link-category">
+                    <span>链接类型：</span>
+                    <el-button type="text" :loading="refreshLoading" @click="onRefresh()">刷新</el-button>
+                    <el-button type="text" @click="onCategoryValue()">全部</el-button>
+                    <span v-for="(item, index) in categoryOptions" :key="index">
+                    <el-button type="text" @click="onCategoryValue(index)">{{ item }}</el-button>
+                    </span>
+                </div>
+                </el-col>
+            </el-row>
+        </div>
+        <div class="link-url-container" style="">
+            <el-row :gutter="20">
+            <el-col :span="3" v-for="(link,index) in linksCategoryFiltered" :key="index">
+                <el-link :href="link.content" target="_blank" type="primary">{{ link.name | nameSnippet }}</el-link>
+            </el-col>
+            </el-row>
+        </div>
+    </el-card>
   </div>
 </template>
 

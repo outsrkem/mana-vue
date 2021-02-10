@@ -10,7 +10,9 @@ import cookie from 'js-cookie'
 import Login from '@/views/login/index.vue'
 import Home from '@/views/home/index.vue'
 import Layout from '@/views/layout/index.vue'
-import Navigation from '@/views/navigation/'
+import linkList from '@/views/navigation/linkList.vue'
+import linkEdit from '@/views/navigation/linkEdit.vue'
+import linkCreate from '@/views/navigation/linkCreate.vue'
 import HostMonitor from '@/views/hostmonitor/index'
 import ServiceManager from '@/views/servicemanager/index'
 import Settings from '@/views/settings/'
@@ -47,31 +49,13 @@ const routes = [
         name: 'home',
         component: Home
       },
-      {
-        path: '/navigation',
-        name: Navigation,
-        component: Navigation
-      },
-      {
-        path: '/hostmonitor',
-        name: HostMonitor,
-        component: HostMonitor
-      },
-      {
-        path: '/cluster',
-        name: Cluster,
-        component: Cluster
-      },
-      {
-        path: '/servicemanager',
-        name: ServiceManager,
-        component: ServiceManager
-      },
-      {
-        path: '/settings',
-        name: 'settings',
-        component: Settings
-      }
+      { path: '/link/list', name: linkList, component: linkList },
+      { path: '/link/edit', name: linkEdit, component: linkEdit },
+      { path: '/link/create', name: linkCreate, component: linkCreate },
+      { path: '/hostmonitor', name: HostMonitor, component: HostMonitor },
+      { path: '/cluster', name: Cluster, component: Cluster },
+      { path: '/servicemanager', name: ServiceManager, component: ServiceManager },
+      { path: '/settings', name: 'settings', component: Settings }
     ]
   }
 ]
