@@ -3,34 +3,28 @@
     el-menu-item 的 index 不能重复，确保唯一即可
     route 是开启路由模式
    -->
-  <el-menu
-    default-active="$route.path"
-    background-color="#002033"
-    text-color="#fff"
-    active-text-color="#ffd04b"
-    router
-  >
-    <el-menu-item index="/">
+  <el-menu :default-active="activePath" background-color="#002033" text-color="#fff" active-text-color="#ffd04b" router>
+    <el-menu-item index="/" @click="onSaveNavState('/')">
       <i class="el-icon-setting"></i>
       <span slot="title">首页</span>
     </el-menu-item>
-    <el-menu-item index="/navigation">
+    <el-menu-item index="/navigation" @click="onSaveNavState('/navigation')">
       <i class="el-icon-link"></i>
       <span slot="title">导航链接</span>
     </el-menu-item>
-    <el-menu-item index="/hostmonitor">
+    <el-menu-item index="/hostmonitor" @click="onSaveNavState('/hostmonitor')">
       <i class="el-icon-stopwatch"></i>
       <span slot="title">主机监控</span>
     </el-menu-item>
-    <el-menu-item index="/servicemanager">
+    <el-menu-item index="/servicemanager" @click="onSaveNavState('/servicemanager')">
       <i class="el-icon-mouse"></i>
       <span slot="title">服务管理</span>
     </el-menu-item>
-    <el-menu-item index="/cluster">
+    <el-menu-item index="/cluster" @click="onSaveNavState('/cluster')">
       <i class="el-icon-box"></i>
       <span slot="title">集群管理</span>
     </el-menu-item>
-    <el-menu-item index="/settings">
+    <el-menu-item index="/settings" @click="onSaveNavState('/settings')">
       <i class="el-icon-menu"></i>
       <span slot="title">个人设置</span>
     </el-menu-item>
@@ -43,15 +37,27 @@ export default {
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      activePath: ''
+    }
   },
   computed: {},
   watch: {},
   created () {
+    /**
+     * 组件创建后初始化 activePath
+     * 若 sessionStorage 没有，则使用 "/"
+     */
+    this.activePath = window.sessionStorage.getItem('active-path') || '/'
   },
-  mounted () {
-  },
-  methods: {}
+  mounted () {},
+  methods: {
+    // 保存菜单激活状态
+    onSaveNavState (activePath) {
+      this.activePath = activePath
+      window.sessionStorage.setItem('active-path', activePath)
+    }
+  }
 }
 </script>
 
