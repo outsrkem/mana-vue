@@ -1,10 +1,17 @@
 <template>
   <div>
+    <div class="link-breadcrumb-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }" ><span @click="onToNewPath('/')">首页</span></el-breadcrumb-item>
+        <el-breadcrumb-item>导航链接</el-breadcrumb-item>
+        <el-breadcrumb-item>链接编辑</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-card class="box-card">
         <div class="control-header">
         <div>
             <el-row>
-            <el-button size="small" type="primary"  @click="onAddNavigationLink">添加链接</el-button>
+            <el-button size="small" type="primary"  @click="onToNewPath('/link/create')">添加链接</el-button>
             </el-row>
         </div>
         <div>
@@ -106,7 +113,7 @@
 
 <script>
 import { getLinksAll, getLink, editLink, deleteLink } from '@/api/navigation'
-
+import globalBus from '@/utils/global-bus'
 export default {
   /**
    * 指定 name 选项的另一个好处是便于调试。
@@ -297,9 +304,11 @@ export default {
       this.refreshLoading = true
       this.loadNavigationLinksAll()
     },
-    onAddNavigationLink () {
-      this.$router.push('/link/create')
-      window.sessionStorage.setItem('active-path', '/link/create')
+    onToNewPath (path) {
+      this.$router.push(path)
+      // 通过消息更新激活状态
+      globalBus.$emit('update-active-path', path)
+      window.sessionStorage.setItem('active-path', path)
     }
   }
 }

@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="link-breadcrumb-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }"><span @click="onToNewPath('/')">首页</span></el-breadcrumb-item>
+        <el-breadcrumb-item>导航链接</el-breadcrumb-item>
+        <el-breadcrumb-item>链接浏览</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-card class="box-card">
         <div class="link-category-container">
             <el-row :gutter="20">
@@ -28,6 +35,7 @@
 
 <script>
 import { getLinksAll } from '@/api/navigation'
+import globalBus from '@/utils/global-bus'
 export default {
   name: 'NavigationLinks',
   components: {},
@@ -87,6 +95,12 @@ export default {
     },
     onCategoryValue (value = '') {
       this.categoryValue = value
+    },
+    onToNewPath (path) {
+      this.$router.push(path)
+      // 通过消息更新激活状态
+      globalBus.$emit('update-active-path', path)
+      window.sessionStorage.setItem('active-path', path)
     }
   }
 }

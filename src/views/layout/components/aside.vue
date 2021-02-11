@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import globalBus from '@/utils/global-bus'
 export default {
   name: 'AppAside',
   components: {},
@@ -55,6 +56,10 @@ export default {
      * 若 sessionStorage 没有，则使用 "/"
      */
     this.activePath = window.sessionStorage.getItem('active-path') || '/'
+    // 更新激活状态
+    globalBus.$on('update-active-path', (data) => {
+      this.activePath = data
+    })
   },
   mounted () {},
   methods: {
