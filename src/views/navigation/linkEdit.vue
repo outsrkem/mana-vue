@@ -16,10 +16,10 @@
         </div>
         <div>
             <el-row>
-            <el-select v-model="categoryValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
+            <el-select v-model="categoryValue" @change="onCategoryChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
                 <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
             </el-select>
-            <el-select v-model="activateValue" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
+            <el-select v-model="activateValue" @change="onActivateChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
                 <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
             </el-select>
             <!--刷新按钮-->
@@ -67,6 +67,11 @@
             </template>
         </el-table-column>
         </el-table>
+        <div class="pagination-row">
+          <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-size="10" :total="pageTotal"
+            @size-change="onSizeChange" @current-change="onCurrentChange" :current-page.sync="currentPage" :page-sizes="[10, 20, 30, 50]">
+          </el-pagination>
+        </div>
         <!-- 编辑的dialog弹框 -->
         <el-dialog title="编辑" :visible.sync="dialogVisible" width="40%" append-to-body :before-close="handleClose">
         <el-form ref="" :model="dialogEditForm" :rules="formRules" label-width="80px">
@@ -129,6 +134,8 @@ export default {
       dialogVisibleDelete: false,
       refreshLoading: false,
       dialogEditForm: {},
+      pageTotal: 0,
+      currentPage: 1,
       links: [],
       categoryOptions: [
         { categoryValue: '1', label: '公共网址' },
@@ -205,10 +212,19 @@ export default {
     formatterActivate: function (row, column) {
       return row.sex === 1 ? '启用' : row.sex === 0 ? '禁用' : ''
     },
-    loadNavigationLinksAll () {
-      // eslint-disable-next-line no-undef
-      getLinksAll().then(res => {
+    loadNavigationLinksAll (pageSize = 10, page = 1) {
+      var activate, category
+      activate = (this.activateValue === '') ? 'all' : this.activateValue
+      category = (this.categoryValue === '') ? null : this.categoryValue
+      const params = {
+        page_size: pageSize,
+        page: page,
+        category: category,
+        activate: activate
+      }
+      getLinksAll(params).then(res => {
         this.links = res.data.response.items
+        this.pageTotal = parseInt(res.data.response.pageInfo.total)
         this.refreshLoading = false
       }).catch(_ => {
         // 刷新失败，也重置刷新按钮
@@ -237,7 +253,6 @@ export default {
         describes: formData.describes
       }
       editLink(paths, data).then(res => {
-        // eslint-disable-next-line no-unused-vars
         // 请求成功
         this.$notify({
           duration: 1000,
@@ -302,13 +317,30 @@ export default {
     onRefresh () {
       // 刷新页面
       this.refreshLoading = true
-      this.loadNavigationLinksAll()
+      this.loadNavigationLinksAll(this.pageSize, this.page)
     },
     onToNewPath (path) {
       this.$router.push(path)
       // 通过消息更新激活状态
       globalBus.$emit('update-active-path', path)
       window.sessionStorage.setItem('active-path', path)
+    },
+    onCurrentChange (page) {
+      this.page = page
+      this.loadNavigationLinksAll(this.pageSize, page)
+    },
+    onSizeChange (pageSize) {
+      this.pageSize = pageSize
+      this.currentPage = 1
+      this.loadNavigationLinksAll(pageSize, 1)
+    },
+    onActivateChange () {
+      //
+      this.loadNavigationLinksAll(this.pageSize, 1)
+    },
+    onCategoryChange () {
+      //
+      this.loadNavigationLinksAll(this.pageSize, 1)
     }
   }
 }
@@ -322,5 +354,8 @@ export default {
   align-items: center;
   border-bottom: 1px solid #ccc;
   background-color: #ffffff;
+}
+.pagination-row {
+  padding-top: 20px;
 }
 </style>
