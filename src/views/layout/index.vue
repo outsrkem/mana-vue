@@ -89,8 +89,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 把用户的登录状态清除
+        // 把用户的登录状态清除和active-path
         window.localStorage.removeItem('user')
+        window.sessionStorage.removeItem('active-path')
 
         // 跳转到登录页面
         this.$router.push('/login')
@@ -107,44 +108,44 @@ export default {
 </script>
 
 <style scoped lang="less">
-.layout-container {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.aside {
-  background-color: #d3dce6;
-
-  .aside-menu {
-    height: 100%;
+  .layout-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
-}
 
-.header {
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  background-color: #ffffff;
+  .aside {
+    background-color: #d3dce6;
 
-  .avatar-wrap {
-    display: flex;
-    align-items: center;
-
-    .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin-right: 10px;
+    .aside-menu {
+      height: 100%;
     }
   }
-}
 
-.main {
-  background-color: #e9eef3;
-}
+  .header {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    background-color: #ffffff;
+
+    .avatar-wrap {
+      display: flex;
+      align-items: center;
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .main {
+    background-color: #e9eef3;
+  }
 </style>
