@@ -1,22 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import cookie from 'js-cookie'
-// 在 VueCLI 创建的项目中 @ 表示 src 目录
-// 它是 src 目录的路径别名
-// 好处：它不受当前文件路径影响
-// 注意：@ 就是 src 路径，后面别忘了写那个斜杠
-// 使用建议：如果加载的资源路径就在当前目录下，那就正常写
-//       如果需要进行父级路径查找的都使用 @
-import Login from '@/views/login/index.vue'
-import Home from '@/views/home/index.vue'
-import Layout from '@/views/layout/index.vue'
-import linkList from '@/views/navigation/linkList.vue'
-import linkEdit from '@/views/navigation/linkEdit.vue'
-import linkCreate from '@/views/navigation/linkCreate.vue'
-import HostMonitor from '@/views/hostmonitor/index'
-import ServiceManager from '@/views/servicemanager/index'
-import Settings from '@/views/settings/'
-import Cluster from '@/views/kubernetes/cluster/index'
+
+/**
+ * 在 VueCLI 创建的项目中 @ 表示 src 目录
+ * 它是 src 目录的路径别名
+ * 好处：它不受当前文件路径影响
+ * 注意：@ 就是 src 路径，后面别忘了写那个斜杠
+ * 使用建议：如果加载的资源路径就在当前目录下，那就正常写
+ * 如果需要进行父级路径查找的都使用 @
+ * 懒加载 const Login = () => import('@/views/login/index.vue')
+ * webpackChunkName 可以为js文件定义名称，若不写则显示其他
+ */
+const Login = () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue')
+const Home = () => import('@/views/home/index.vue')
+const Layout = () => import('@/views/layout/index.vue')
+const linkList = () => import('@/views/navigation/linkList.vue')
+const linkEdit = () => import('@/views/navigation/linkEdit.vue')
+const linkCreate = () => import('@/views/navigation/linkCreate.vue')
+const HostMonitor = () => import('@/views/hostmonitor/index')
+const ServiceManager = () => import('@/views/servicemanager/index')
+const Settings = () => import('@/views/settings/')
+const Cluster = () => import('@/views/kubernetes/cluster/index')
 
 Vue.use(VueRouter)
 
@@ -27,7 +32,11 @@ VueRouter.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-// 路由配置表
+/**
+ * 路由配置表
+ * path 为空，会作为默认子路由渲染
+ * 路由的名字是干啥的？参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
+ */
 const routes = [
   {
     path: '/login',
@@ -35,17 +44,12 @@ const routes = [
     component: Login
   },
   {
-    path: '/', // path 为空，会作为默认子路由渲染
-    // 路由的名字是干啥的？
-    // 参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
-    // name: 'Layout',
+    path: '/',
+    name: 'Layout',
     component: Layout,
     children: [
       {
         path: '', // path 为空，会作为默认子路由渲染
-
-        // 路由的名字是干啥的？
-        // 参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
         name: 'home',
         component: Home
       },
