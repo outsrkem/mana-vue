@@ -38,21 +38,12 @@ VueRouter.prototype.push = function push (location) {
  * 路由的名字是干啥的？参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
  */
 const routes = [
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
+  { path: '/login', name: 'login', component: Login },
   {
     path: '/',
-    name: 'Layout',
     component: Layout,
     children: [
-      {
-        path: '', // path 为空，会作为默认子路由渲染
-        name: 'home',
-        component: Home
-      },
+      { path: '', /* path 为空，会作为默认子路由渲染 */ name: 'home', component: Home },
       { path: '/link/list', name: 'linkList', component: linkList },
       { path: '/link/edit', name: 'linkEdit', component: linkEdit },
       { path: '/link/create', name: 'linkCreate', component: linkCreate },
