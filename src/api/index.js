@@ -12,17 +12,47 @@ import ajax from '@/api/ajax'
  */
 // const BASE_URL = 'http://localhost:4000'
 const BASE_URL = '/api'
+/**
+ *********************************用户相关****************************************************
+ */
 
-// 获取用户信息, 4个参数，后面3个为空，可以不传
-export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
+/**
+ * 用户登录
+ * @param {*} data 登录请求体：{username: "lis", password: "123456"}
+ */
 export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, data)
 
-// 查询导航链接
-export const getLinkNew = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id)
+/**
+ * 查询用户信息
+ * @param {*} userid 用户id
+ */
+export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
 
-// 获取主机监控
+/**
+ *********************************导航链接****************************************************
+ */
+/**
+ * 查询单条记录
+ * @param {*} paths 路径参数，
+ */
+export const getLink = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id)
+
+/**
+ *********************************主机监控****************************************************
+ */
+/**
+ * 获取主机监控信息
+ * @param {*} params 查询参数
+ */
 export const getHostMonitor = (params) => ajax('/api/v1/common/resource/monitor', 'GET', params)
 
+/**
+ ********************************************************************************************
+ */
+//
+//
+/**
+ */
 // 1.获取地址信息(根据经纬度串)
 // 这个接口的经纬度参数是在url路径里的param参数，没有query参数
 export const reqAddress = (geohash) => ajax(`${BASE_URL}/position/${geohash}`)

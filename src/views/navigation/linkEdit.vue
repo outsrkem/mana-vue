@@ -117,8 +117,8 @@
 </template>
 
 <script>
-import { getLinksAll, getLink, editLink, deleteLink } from '@/api/navigation'
-import { getLinkNew } from '@/api/index.js'
+import { getLinksAll, editLink, deleteLink } from '@/api/navigation'
+import { getLink } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   /**
@@ -234,7 +234,7 @@ export default {
     },
     async loadNavigationLinks (id) {
       const paths = { id: id }
-      const res = await getLinkNew(paths)
+      const res = await getLink(paths)
       this.dialogEditForm = res.response
       if (res.metaInfo.code !== '200') {
         return false
