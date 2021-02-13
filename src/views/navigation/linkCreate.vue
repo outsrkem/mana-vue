@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import { addLink } from '@/api/navigation'
+import { addLink } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   name: 'NavigationAdd',
@@ -94,7 +94,7 @@ export default {
   mounted () {},
   methods: {
     // 提交修改
-    loadCommitAddlink (fromData) {
+    loadCommitAddlink: async function (fromData) {
       const data = {
         name: fromData.name,
         url: fromData.url,
@@ -102,22 +102,11 @@ export default {
         category: fromData.category,
         describes: fromData.describes
       }
-      addLink(data).then(res => {
-        // eslint-disable-next-line no-unused-vars
-        // 请求成功
-        this.$notify({
-          duration: 1000,
-          title: '添加链接成功',
-          type: 'success'
-        })
+      await addLink(data).then(res => {
+        this.$notify({ duration: 1000, title: '添加链接成功', type: 'success' })
         this.resetForm()
       }).catch(err => {
-        // 请求失败
-        this.$notify({
-          title: '添加失败',
-          message: err,
-          type: 'error'
-        })
+        this.$notify({ title: '添加失败', message: err, type: 'error' })
       })
     },
     onSubmitFormAddLink () {
@@ -129,6 +118,7 @@ export default {
       })
     },
     resetForm () {
+      // 清空输入框
       this.$refs.elForm.resetFields()
     },
     onToNewPath (path) {

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { getLinksAll } from '@/api/navigation'
+import { getLinksAll } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   name: 'NavigationLinks',
@@ -91,19 +91,14 @@ export default {
   mounted () {
   },
   methods: {
-    loadNavigationLinksAll (pageSize = 100, page = 1) {
-      const params = {
-        page_size: pageSize,
-        page: page,
-        category: (this.categoryValue === '') ? null : this.categoryValue,
-        activate: (this.activateValue === '') ? null : this.activateValue
-      }
-      getLinksAll(params).then(res => {
-        this.links = res.data.response.items
-        this.pageTotal = parseInt(res.data.response.pageInfo.total)
+    loadNavigationLinksAll: async function (pageSize = 100, page = 1) {
+      const category = (this.categoryValue === '') ? null : this.categoryValue
+      const params = { page_size: pageSize, page: page, category: category }
+      await getLinksAll(params).then(res => {
+        this.links = res.response.items
+        this.pageTotal = res.response.pageInfo.total
         this.refreshLoading = false
       }).catch(_ => {
-        // 刷新失败，也重置刷新按钮
         this.refreshLoading = false
       })
     },

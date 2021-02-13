@@ -117,8 +117,7 @@
 </template>
 
 <script>
-import { getLinksAll, editLink, deleteLink } from '@/api/navigation'
-import { getLink } from '@/api/index.js'
+import { getLinksAll, getLink, deleteLink, editLink } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   /**
@@ -213,24 +212,15 @@ export default {
     formatterActivate: function (row, column) {
       return row.sex === 1 ? '启用' : row.sex === 0 ? '禁用' : ''
     },
-    loadNavigationLinksAll (pageSize = 10, page = 1) {
-      var activate, category
-      activate = (this.activateValue === '') ? 'all' : this.activateValue
-      category = (this.categoryValue === '') ? null : this.categoryValue
-      const params = {
-        page_size: pageSize,
-        page: page,
-        category: category,
-        activate: activate
-      }
-      getLinksAll(params).then(res => {
-        this.links = res.data.response.items
-        this.pageTotal = parseInt(res.data.response.pageInfo.total)
+    loadNavigationLinksAll: async function (pageSize = 10, page = 1) {
+      const activate = (this.activateValue === '') ? 'all' : this.activateValue
+      const category = (this.categoryValue === '') ? null : this.categoryValue
+      const params = { page_size: pageSize, page: page, category: category, activate: activate }
+      await getLinksAll(params).then(res => {
+        this.links = res.response.items
+        this.pageTotal = parseInt(res.response.pageInfo.total)
         this.refreshLoading = false
-      }).catch(_ => {
-        // 刷新失败，也重置刷新按钮
-        this.refreshLoading = false
-      })
+      }).catch(_ => { this.refreshLoading = false })
     },
     async loadNavigationLinks (id) {
       const paths = { id: id }
@@ -242,10 +232,8 @@ export default {
       return true
     },
     // 提交修改
-    loadCommitChanges (id, formData) {
-      const paths = {
-        id: id
-      }
+    loadCommitChanges: async function (id, formData) {
+      const paths = { id }
       const data = {
         name: formData.name,
         url: formData.content,
@@ -253,41 +241,20 @@ export default {
         category: formData.category,
         describes: formData.describes
       }
-      editLink(paths, data).then(res => {
-        // 请求成功
-        this.$notify({
-          duration: 1000,
-          title: '修改链接成功',
-          type: 'success'
-        })
-        this.loadNavigationLinksAll()
+      await editLink(paths, data).then(_ => {
+        this.onRefresh() /** 刷新页面 */
+        this.$notify({ duration: 1000, title: '修改链接成功', type: 'success' })
       }).catch(err => {
-        // 请求失败
-        this.$notify({
-          title: '修改失败',
-          message: err,
-          type: 'error'
-        })
+        this.$notify({ title: '修改失败', message: err, type: 'error' })
       })
     },
     // 提交删除
-    loadDeleteLink (id) {
-      const paths = {
-        id: id
-      }
-      deleteLink(paths).then(res => {
-        this.$notify({
-          duration: 1000,
-          title: '删除成功',
-          type: 'success'
-        })
-        this.loadNavigationLinksAll()
+    loadDeleteLink: async function (id) {
+      await deleteLink({ id }).then(_ => {
+        this.onRefresh() /** 删除后刷新页面 */
+        this.$notify({ duration: 1000, title: '删除成功', type: 'success' })
       }).catch(err => {
-        this.$notify({
-          title: '删除失败',
-          message: err,
-          type: 'error'
-        })
+        this.$notify({ title: '删除失败', message: err, type: 'error' })
       })
     },
     onHandleEdit: async function (id) {
