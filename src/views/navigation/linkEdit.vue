@@ -9,24 +9,24 @@
     </div>
     <el-card class="box-card">
         <div class="control-header">
-        <div>
-            <el-row>
-            <el-button size="small" type="primary"  @click="onToNewPath('/link/create')">添加链接</el-button>
-            </el-row>
-        </div>
-        <div>
-            <el-row>
-            <el-select v-model="categoryValue" @change="onCategoryChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
-                <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
-            </el-select>
-            <el-select v-model="activateValue" @change="onActivateChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
-                <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
-            </el-select>
-            <!--刷新按钮-->
-            <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" :loading="refreshLoading" @click="onRefresh"/>
-            <!--/刷新按钮-->
-            </el-row>
-        </div>
+          <div>
+              <el-row>
+              <el-button size="small" type="primary"  @click="onToNewPath('/link/create')">添加链接</el-button>
+              </el-row>
+          </div>
+          <div>
+              <el-row>
+              <el-select v-model="categoryValue" @change="onCategoryChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择类别">
+                  <el-option v-for="item in categoryOptions" :key="item.categoryValue" :label="item.label" :value="item.categoryValue"/>
+              </el-select>
+              <el-select v-model="activateValue" @change="onActivateChange()" size="small" style="margin-left: 20px;" filterable clearable placeholder="请选择禁启用">
+                  <el-option v-for="item in activateOptions" :key="item.activateValue" :label="item.label" :value="item.activateValue"/>
+              </el-select>
+              <!--刷新按钮-->
+              <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" :loading="refreshLoading" @click="onRefresh"/>
+              <!--/刷新按钮-->
+              </el-row>
+          </div>
         </div>
         <el-table size="medium" :data="linksActivateFiltered" style="width: 100%" class="filter-card">
         <el-table-column label="序号" width="50">

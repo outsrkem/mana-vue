@@ -1,33 +1,37 @@
 <template>
-  <div>
+  <div >
     <!--
     Card 卡片
     将信息聚合在卡片容器中展示。
     -->
-    <el-card class="box-card">
-      <div slot="header" class="clearfix my_refresh">
-        <!--面包屑导航-->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>服务管理</el-breadcrumb-item>
-        </el-breadcrumb>
-        <!--/面包屑导航-->
+    <el-card class="box-card" :body-style="{ 'padding-top': '10px' }">
+      <div class="control-header">
         <div>
-          <el-select size="small" v-model="clusterId" @change="onClusterIdChange()" filterable placeholder="请选择">
-            <el-option v-for="item in clusters" :key="item.clusterId" :label="item.clusterLabel" :value="item.clusterId"/>
-          </el-select>
-          <el-select size="small" v-model="ns" @change="onNamespacesIdChange()" filterable placeholder="请选择" style="margin-left: 20px;">
-            <el-option v-for="item in namespaces" :key="item.ns" :label="item.nsLabel" :value="item.ns"/>
-          </el-select>
-          <el-select size="small" v-model="control" @change="onControlsChange()" filterable placeholder="请选择" style="margin-left: 20px;">
-            <el-option v-for="item in controls" :key="item.controlValue" :label="item.controlLabel" :value="item.controlValue"/>
-          </el-select>
+          <el-row>
+            <!--面包屑导航-->
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item>服务管理</el-breadcrumb-item>
+            </el-breadcrumb>
+            <!--/面包屑导航-->
+          </el-row>
         </div>
-        <!--刷新按钮-->
-        <el-row>
-          <el-button size="small" icon="el-icon-refresh" @click="onRefresh"/>
-        </el-row>
-        <!--/刷新按钮-->
+        <div>
+          <el-row>
+            <el-select size="small" v-model="clusterId" @change="onClusterIdChange()" filterable placeholder="请选择">
+              <el-option v-for="item in clusters" :key="item.clusterId" :label="item.clusterLabel" :value="item.clusterId"/>
+            </el-select>
+            <el-select size="small" v-model="ns" @change="onNamespacesIdChange()" filterable placeholder="请选择" style="margin-left: 20px;">
+              <el-option v-for="item in namespaces" :key="item.ns" :label="item.nsLabel" :value="item.ns"/>
+            </el-select>
+            <el-select size="small" v-model="control" @change="onControlsChange()" filterable placeholder="请选择" style="margin-left: 20px;">
+              <el-option v-for="item in controls" :key="item.controlValue" :label="item.controlLabel" :value="item.controlValue"/>
+            </el-select>
+            <!--刷新按钮-->
+            <el-button size="small" icon="el-icon-refresh" style="margin-left: 20px;" @click="onRefresh"/>
+          </el-row>
+          <!--/刷新按钮-->
+        </div>
       </div>
       <!--表格开始-->
       <el-table size="medium" :data="workingLoad" style="width: 100%" class="filter-card">
@@ -174,9 +178,12 @@ export default {
   .filter-card {
     margin-bottom: 20px;
   }
-  .my_refresh {
+  .control-header {
+    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #ccc;
+    background-color: #ffffff;
   }
 </style>
