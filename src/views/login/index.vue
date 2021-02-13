@@ -61,7 +61,6 @@ export default {
       return await login(this.user)
     },
     onLogin: async function () {
-      let status = '0'
       /**
        * 获取表单数据（根据接口要求绑定数据）
        * const user = this.user
@@ -79,8 +78,7 @@ export default {
         console.log('登录失败', err)
       })
       this.loginLoading = false
-      status = res.metaInfo.code
-      if (status === '200') {
+      if (res.metaInfo.code === '200') {
         // 登录成功后保存信息到cookies，浏览器关闭后删除
         const response = res.response
         this.$cookies.set('authentication-token', response.token, '0')
