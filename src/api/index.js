@@ -3,6 +3,13 @@
  * 包含n个接口请求函数的模块，函数的返回值是promise对象
  */
 import ajax from '@/api/ajax'
+/**
+ * ajax 有如下4个参数
+ * @param {*} url 请求路径，默认为空
+ * @param {*} method 请求方法，默认为GET
+ * @param {*} params 请求参数，默认为空对象
+ * @param {*} data 请求参数，默认为空对象
+ */
 // const BASE_URL = 'http://localhost:4000'
 const BASE_URL = '/api'
 
@@ -12,6 +19,9 @@ export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, d
 
 // 查询导航链接
 export const getLinkNew = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id)
+
+// 获取主机监控
+export const getHostMonitor = (params) => ajax('/api/v1/common/resource/monitor', 'GET', params)
 
 // 1.获取地址信息(根据经纬度串)
 // 这个接口的经纬度参数是在url路径里的param参数，没有query参数
