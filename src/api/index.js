@@ -8,6 +8,7 @@ const BASE_URL = '/api'
 
 // 获取用户信息, 4个参数，后面3个为空，可以不传
 export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
+export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, data)
 
 // 查询导航链接
 export const getLinkNew = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id)

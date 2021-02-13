@@ -55,6 +55,7 @@ request.interceptors.response.use(function (response) {
     cookie.remove('authentication-token')
     router.push('/login')
     Message.error('登录状态无效，请重新登录')
+    return error.response
   } else if (status === 403) {
     // token 未携带或已过期
     Message({

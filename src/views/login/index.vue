@@ -27,8 +27,7 @@
 </template>
 
 <script>
-// import request from '@/utils/request'
-import { login } from '@/api/user'
+import { login } from '@/api/index.js'
 
 export default {
   name: 'LoginIndex',
@@ -58,7 +57,11 @@ export default {
   created () {},
   mounted () {},
   methods: {
-    onLogin () {
+    async loginRequest () {
+      return await login(this.user)
+    },
+    onLogin: async function () {
+      let status = '0'
       /**
        * 获取表单数据（根据接口要求绑定数据）
        * const user = this.user
@@ -71,26 +74,21 @@ export default {
        * 这样做的好处就是：管理维护更方便，也好重用
        */
       this.loginLoading = true
-      login(this.user).then(res => {
-        // 登录成功
-        const response = res.data.response
-        // 保存信息到cookies，浏览器关闭后删除
+      const res = await this.loginRequest().catch(err => {
+        this.loginLoading = false
+        console.log('登录失败', err)
+      })
+      this.loginLoading = false
+      status = res.metaInfo.code
+      if (status === '200') {
+        // 登录成功后保存信息到cookies，浏览器关闭后删除
+        const response = res.response
         this.$cookies.set('authentication-token', response.token, '0')
         this.$cookies.set('userid', response.userid, '0')
         this.$cookies.set('nickname', response.nickname, '0')
-
-        // 跳转到首页
-        // this.$router.push('/')
+        this.$router.push({ /* 这个 name 是路由的名字 */ name: 'home' })
         this.loginLoading = false
-        this.$router.push({
-          // 这个 name 是路由的名字
-          name: 'home'
-        })
-      }).catch(err => {
-        console.log('登录失败', err)
-        this.loginLoading = false
-        // 登录失败
-      })
+      }
     }
   }
 }

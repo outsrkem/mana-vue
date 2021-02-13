@@ -10,11 +10,7 @@
         <!--/面包屑导航-->
         <!--刷新按钮-->
         <el-row>
-          <el-button
-            size="small"
-            icon="el-icon-refresh"
-            @click="onRefresh">
-          </el-button>
+          <el-button size="small" icon="el-icon-refresh" @click="onRefresh"></el-button>
         </el-row>
         <!--/刷新按钮-->
       </div>
@@ -22,23 +18,13 @@
       <el-row>
         <el-col :span="10">
           <el-form ref="form" :model="user" label-width="100px">
-            <el-form-item label="用户名称：">{{ user.username }}
-            </el-form-item>
-            <el-form-item label="用户昵称：">
-              <el-input v-model="user.nickname"></el-input>
-            </el-form-item>
-            <el-form-item label="个人邮箱：">{{ user.email }}
-            </el-form-item>
-            <el-form-item label="联系电话：">{{ user.mobile }}
-            </el-form-item>
-            <el-form-item label="个人描述：">{{ user.describes }}
-            </el-form-item>
+            <el-form-item label="用户名称：">{{ user.username }}</el-form-item>
+            <el-form-item label="用户昵称："><el-input v-model="user.nickname"></el-input></el-form-item>
+            <el-form-item label="个人邮箱：">{{ user.email }}</el-form-item>
+            <el-form-item label="联系电话：">{{ user.mobile }}</el-form-item>
+            <el-form-item label="个人描述：">{{ user.describes }}</el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click="onUpdateUserInfo"
-              >保存修改
-              </el-button>
+              <el-button type="primary" @click="onUpdateUserInfo">保存修改</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -50,23 +36,16 @@
 </template>
 
 <script>
-import { getUserInfo } from '@/api/user'
+import { getUserInfo } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 
 export default {
-
   name: 'Settings',
   components: {},
   props: {},
   data () {
     return {
-      user: {
-        userid: '',
-        username: '',
-        email: '',
-        mobile: '',
-        describes: ''
-      }
+      user: {}
     }
   },
   computed: {},
@@ -75,21 +54,18 @@ export default {
     // 组件初始化好，请求获取用户资料
     this.loadUserInfo()
   },
-  mounted () {
-  },
+  mounted () {},
   methods: {
-    loadUserInfo () {
-      // 获取用户信息
-      getUserInfo().then(res => {
-        this.user = res.data.response
-      })
+    loadUserInfo: async function () {
+      const userid = this.$cookies.get('userid')
+      const res = await getUserInfo(userid)
+      this.user = res.response
     },
     onRefresh () {
       // 刷新页面
       this.loadUserInfo()
     },
     onUpdateUserInfo () {
-      // console.log('onUpdateUserInfo')
       globalBus.$emit('update-user', this.user)
     }
   }

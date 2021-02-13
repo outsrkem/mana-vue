@@ -1,9 +1,6 @@
 <template>
   <el-container class="layout-container">
-    <el-aside
-      class="aside"
-      width="200px"
-    >
+    <el-aside class="aside" width="200px">
       <app-aside class="aside-menu"/>
     </el-aside>
     <el-container>
@@ -24,10 +21,7 @@
               组件默认是不识别原生事件的，除非内部做了处理
               https://cn.vuejs.org/v2/guide/components-custom-events.html#%E5%B0%86%E5%8E%9F%E7%94%9F%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E5%88%B0%E7%BB%84%E4%BB%B6
              -->
-            <el-dropdown-item
-              @click.native="onLogout"
-            >退出
-            </el-dropdown-item>
+            <el-dropdown-item @click.native="onLogout" >退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -41,8 +35,8 @@
 
 <script>
 import AppAside from './components/aside'
-import { getUserInfo } from '@/api/user.js'
 import globalBus from '@/utils/global-bus'
+import { getUserInfo } from '@/api/index.js'
 
 export default {
   name: 'LayoutIndex',
@@ -63,45 +57,35 @@ export default {
 
     // 要注册事件
     globalBus.$on('update-user', (data) => {
-      // console.log('update-user', data)
-      // 对象之间是引用数据类型，导致$emit中修改后，这边也变化
-      // this.user = data
-      // 使用普通数据就不会相互影响
-      // this.user.nickname = data.nickname
+      /**
+       * 对象之间是引用数据类型，导致$emit中修改后，这边也变化
+       * this.user = data , 对象赋值是引用传递
+       * 使用普通数据就不会相互影响,如下
+       * this.user.nickname = data.nickname
+       */
       this.user.nickname = data.nickname
     })
   },
-  mounted () {
-  },
+  mounted () {},
   methods: {
     // 除了登录接口，其它所有接口都需要授权才能请求使用
     // 或者说，除了登录接口，其它接口都需要提供你的身份令牌才能获取数据
-    loadUserInfo () {
-      getUserInfo().then(res => {
-        this.user = res.data.response
-      })
+    loadUserInfo: async function () {
+      const userid = this.$cookies.get('userid')
+      const res = await getUserInfo(userid)
+      this.user = res.response
     },
 
     onLogout () {
       // MessageBox 弹框
-      this.$confirm('确认退出吗？', '退出提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      this.$confirm('确认退出吗？', '退出提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         // 把用户的登录状态清除和active-path
         window.localStorage.removeItem('user')
         window.sessionStorage.removeItem('active-path')
 
         // 跳转到登录页面
         this.$router.push('/login')
-      }).catch(() => {
-        // 取消的弹窗
-        // this.$message({
-        //   type: 'info',
-        //   message: '已取消退出'
-        // })
-      })
+      }).catch(() => {})
     }
   }
 }

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { test, getUserInfo } from '@/api/index.js'
+import { getUserInfo } from '@/api/index.js'
 
 export default {
   // 指定 name 选项的另一个好处是便于调试。
