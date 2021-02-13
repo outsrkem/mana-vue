@@ -13,142 +13,59 @@
         </el-breadcrumb>
         <!--/面包屑导航-->
         <div>
-          <el-select
-            size="small"
-            v-model="clusterId"
-            @change="onClusterIdChange()"
-            filterable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in clusters"
-              :key="item.clusterId"
-              :label="item.clusterLabel"
-              :value="item.clusterId"
-            >
-            </el-option>
+          <el-select size="small" v-model="clusterId" @change="onClusterIdChange()" filterable placeholder="请选择">
+            <el-option v-for="item in clusters" :key="item.clusterId" :label="item.clusterLabel" :value="item.clusterId"/>
           </el-select>
-          <el-select
-            size="small"
-            v-model="ns"
-            @change="onNamespacesIdChange()"
-            filterable
-            placeholder="请选择"
-            style="margin-left: 20px;"
-          >
-            <el-option
-              v-for="item in namespaces"
-              :key="item.ns"
-              :label="item.nsLabel"
-              :value="item.ns"
-            >
-            </el-option>
+          <el-select size="small" v-model="ns" @change="onNamespacesIdChange()" filterable placeholder="请选择" style="margin-left: 20px;">
+            <el-option v-for="item in namespaces" :key="item.ns" :label="item.nsLabel" :value="item.ns"/>
           </el-select>
-          <el-select
-            size="small"
-            v-model="control"
-            @change="onControlsChange()"
-            filterable
-            placeholder="请选择"
-            style="margin-left: 20px;"
-          >
-            <el-option
-              v-for="item in controls"
-              :key="item.controlValue"
-              :label="item.controlLabel"
-              :value="item.controlValue">
-            </el-option>
+          <el-select size="small" v-model="control" @change="onControlsChange()" filterable placeholder="请选择" style="margin-left: 20px;">
+            <el-option v-for="item in controls" :key="item.controlValue" :label="item.controlLabel" :value="item.controlValue"/>
           </el-select>
         </div>
         <!--刷新按钮-->
         <el-row>
-          <el-button
-            size="small"
-            icon="el-icon-refresh"
-            @click="onRefresh">
-          </el-button>
+          <el-button size="small" icon="el-icon-refresh" @click="onRefresh"/>
         </el-row>
         <!--/刷新按钮-->
       </div>
       <!--表格开始-->
-      <el-table
-        size="medium"
-        :data="workingLoad"
-        style="width: 100%"
-        class="filter-card">
+      <el-table size="medium" :data="workingLoad" style="width: 100%" class="filter-card">
         <!--表格内展开行-->
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-table
-                :data="props.row.containers"
-                border
-                style="width: 100%">
-                <el-table-column
-                  prop="name"
-                  label="name"
-                  width="300">
-                </el-table-column>
-                <el-table-column
-                  prop="image"
-                  label="image">
-                </el-table-column>
-                <el-table-column
-                  prop="imageVersion"
-                  label="imageVersion">
-                </el-table-column>
+              <el-table :data="props.row.containers" border style="width: 100%">
+                <el-table-column prop="name" label="name" width="300"/>
+                <el-table-column prop="image" label="image"/>
+                <el-table-column prop="imageVersion" label="imageVersion"/>
               </el-table>
             </el-form>
           </template>
         </el-table-column>
-        <!--/表格内展开行-->
-        <el-table-column
-          prop="name"
-          label="NAME"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="replicas"
-          label="replicas"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="creationTimestamp"
-          label="CREATIONTIME">
-        </el-table-column>
+        <!--/表格内展开行结束-->
+        <el-table-column prop="name" label="NAME" width="180"/>
+        <el-table-column prop="replicas" label="replicas" width="180"/>
+        <el-table-column prop="creationTimestamp" label="CREATIONTIME"/>
       </el-table>
-      <!--/表格开始-->
-      <!--Pagination 分页-->
-      <!--
-      :current-page.sync="currentPage"  当前页码
-      @size-change="onSizeChange" 页码大小改变触发事件
-      :total="pageTotal" 总条数
-      layout="sizes, prev, pager, next" 其中sizes是显示选择多少条为一页
-      -->
-      <el-pagination
-        @current-change="onCurrentChange"
-        @size-change="onSizeChange"
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="pageSize"
-        background
-        layout="sizes, prev, pager, next"
-        :total="pageTotal"
-        :current-page.sync="currentPage"
-        :pager-count="11"
-      >
-      </el-pagination>
-      <!--/Pagination 分页-->
+      <!--/表格结束-->
+      <!--Pagination 分页开始-->
+        <!--
+        :current-page.sync="currentPage"  当前页码
+        @size-change="onSizeChange" 页码大小改变触发事件
+        :total="pageTotal" 总条数
+        layout="sizes, prev, pager, next" 其中sizes是显示选择多少条为一页
+        -->
+      <el-pagination @current-change="onCurrentChange" @size-change="onSizeChange" :page-sizes="[10, 20, 30, 50]"
+        :page-size="pageSize" background layout="total, sizes, prev, pager, next" :total="pageTotal"
+        :current-page.sync="currentPage" :pager-count="11"/>
+      <!--/Pagination 分页结束-->
     </el-card>
   </div>
 </template>
 
 <script>
-import {
-  getWorkingLoad,
-  getNameSpaces,
-  getCluster
-} from '@/api/kubernetes'
-
+import { getCluster, getNameSpaces, getWorkingLoad } from '@/api/index.js'
 export default {
   name: 'serviceManager',
   data () {
@@ -179,12 +96,10 @@ export default {
     this.loadCluster()
   },
   methods: {
-    loadCluster (type) {
+    loadCluster: async function (type) {
       // 获取取群列表
-      getCluster({
-        type: type
-      }).then(res => {
-        const result = res.data
+      await getCluster().then(res => {
+        const result = res
         // 如果有一个集群，则默认为第一个集群
         this.clusterId = result.response.items[0].id
         // 首次加载负载
@@ -199,37 +114,26 @@ export default {
       })
     },
     // 加载名称空间
-    loadNamespaces (clusterId) {
+    loadNamespaces: async function (clusterId) {
       // 获取集群的名称空间
-      getNameSpaces({ clusterId: clusterId },
-        {}).then(res => {
-        const result = res.data
-        this.namespaces = result.response.items.map(items => ({
+      const paths = { clusterId }
+      await getNameSpaces(paths).then(res => {
+        this.namespaces = res.response.items.map(items => ({
           ns: items,
           nsLabel: items
-
         }))
         // this.namespaces = namespaces
       })
     },
     // 加载工作负载
-    loadWorkingLoad (pageSize, page, clusterId, namespaces = 'kube-system', control) {
-      // 定义请求参数，params
-      const params = {
-        pageSize: pageSize,
-        page: page
-      }
-      // 定义请求参数，路径参数
-      const paths = {
-        clusterId: clusterId,
-        namespaces: namespaces,
-        control: control
-      }
+    loadWorkingLoad: async function (pageSize, page, clusterId, namespaces = 'kube-system', control) {
+      // 定义请求参数，路径参数和params
+      const paths = { clusterId, namespaces, control }
+      const params = { page_size: pageSize, page: page }
       // 请求
-      getWorkingLoad(paths, params).then(res => {
-        const { total: pageTotal } = res.data.response.pageInfo
-        this.workingLoad = res.data.response.items
-        // this.pageTotal = pageTotal
+      await getWorkingLoad(paths, params).then(res => {
+        const { total: pageTotal } = res.response.pageInfo
+        this.workingLoad = res.response.items
         // 转为int
         this.pageTotal = parseInt(pageTotal)
       })
@@ -267,13 +171,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-.filter-card {
-  margin-bottom: 20px;
-}
-
-.my_refresh {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .filter-card {
+    margin-bottom: 20px;
+  }
+  .my_refresh {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 </style>

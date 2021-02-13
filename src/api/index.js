@@ -45,13 +45,13 @@ export const getLinksAll = (params) => ajax('/api/v1/common/navigation/links', '
  * @param {*} paths 路径参数:{id: "xx"}
  * @param {*} data 请求参数:{name: "xxx", url: "x", activate: "x", category: "x", describes: "xxx"}
  */
-export const editLink = (paths, data) => ajax('/api/v1/common/navigation/links/' + paths.id, 'PATCH', null, data)
+export const editLink = (paths, data) => ajax(`/api/v1/common/navigation/links/${paths.id}`, 'PATCH', null, data)
 
 /**
  * 删除导航链接
  * @param {*} paths paths 路径参数:{id: "xx"}
  */
-export const deleteLink = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id, 'DELETE')
+export const deleteLink = (paths) => ajax(`/api/v1/common/navigation/links/${paths.id}`, 'DELETE')
 
 /**
  * 添加导航链接
@@ -67,3 +67,40 @@ export const addLink = (data) => ajax('/api/v1/common/navigation/links', 'POST',
  * @param {*} params 查询参数
  */
 export const getHostMonitor = (params) => ajax('/api/v1/common/resource/monitor', 'GET', params)
+
+/**
+ *********************************kubernetes****************************************************
+ */
+/**
+ * 获取集群列表
+ * @param {*} params 查询参数
+ */
+export const getCluster = (params) => ajax('/api/v1/common/kubernetes/cluster', 'GET', params)
+
+/**
+ * 添加集群
+ * @param {*} data k8s 集群鉴权文件
+ */
+export const addCluster = (data) => ajax('/api/v1/common/kubernetes/cluster', 'POST', null, data)
+
+/**
+ * 删除集群配置
+ * @param {*} params
+ */
+export const deleteCluster = (params) => ajax('/api/v1/common/kubernetes/cluster', 'DELETE', params)
+
+/**
+ * 获取集群名称空间
+ * @param {*} paths
+ * @param {*} params
+ */
+export const getNameSpaces = (paths, params) => ajax(`/api/v1/common/kubernetes/cluster/${paths.clusterId}/namespaces`, 'GET', params)
+
+/**
+ * 获取负载列表
+ * https://10.10.10.10/api/v1/common/kubernetes/cluster/66/control/kube-system/deployments
+ * @param {*} paths
+ * @param {*} params
+ */
+export const getWorkingLoad = (paths, params) => ajax(
+  `/api/v1/common/kubernetes/cluster/${paths.clusterId}/control/${paths.namespaces}/${paths.control}`, 'GET', params)
