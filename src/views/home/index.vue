@@ -1,9 +1,13 @@
 <template>
-  <div class="home-container">{{ userInfo.username }}</div>
+  <div class="home-container">{{ userInfo.username }}
+    <el-row>
+    <el-button @click="onbutto">默认按钮</el-button>
+  </el-row>
+  </div>
 </template>
 
 <script>
-import { test } from '@/api/index.js'
+import { test, getUserInfo } from '@/api/index.js'
 
 export default {
   // 指定 name 选项的另一个好处是便于调试。
@@ -16,8 +20,8 @@ export default {
   data () {
     return {
       userInfo: [{
-        userid: '1610853130945803400',
-        username: 'admin'
+        userid: '',
+        username: ''
       }]
     }
   },
@@ -26,13 +30,17 @@ export default {
   created () {
   },
   async mounted () {
-    // 调用 ajax 的封装
-    const res = await test()
-    // 可直接获取到返回的数据
-    console.log(res)
-    this.userInfo = res.response
+    this.onbutto()
   },
-  methods: {}
+  methods: {
+    async onbutto () {
+      const userid = this.$cookies.get('userid')
+      // 调用 ajax 的封装
+      const res = await getUserInfo(userid)
+      // 可直接获取到返回的数据
+      this.userInfo = res.response
+    }
+  }
 }
 </script>
 

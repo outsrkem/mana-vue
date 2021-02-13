@@ -72,11 +72,3 @@ request.interceptors.response.use(function (response) {
 
 // 导出请求方法
 export default request
-
-// 谁要使用谁就加载 request 模块
-// import request from 'request.js'
-// request.xxx
-// request({
-//   method: ,
-//   url: ''
-// })

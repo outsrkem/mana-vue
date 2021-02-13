@@ -2,11 +2,15 @@
  * 与后台交互模块 （依赖已封装的ajax函数）
  * 包含n个接口请求函数的模块，函数的返回值是promise对象
  */
-import ajax from './ajax'
+import ajax from '@/api/ajax'
 // const BASE_URL = 'http://localhost:4000'
 const BASE_URL = '/api'
 
-export const test = () => ajax('/api/v1/common/user/userinfo/89b8bd3386ab46c5a906bd4e3818bbca')
+// 获取用户信息, 4个参数，后面3个为空，可以不传
+export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
+
+// 查询导航链接
+export const getLinkNew = (paths) => ajax('/api/v1/common/navigation/links/' + paths.id)
 
 // 1.获取地址信息(根据经纬度串)
 // 这个接口的经纬度参数是在url路径里的param参数，没有query参数

@@ -118,6 +118,7 @@
 
 <script>
 import { getLinksAll, getLink, editLink, deleteLink } from '@/api/navigation'
+import { getLinkNew } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   /**
@@ -231,14 +232,14 @@ export default {
         this.refreshLoading = false
       })
     },
-    loadNavigationLinks (id) {
-      const paths = {
-        id: id
+    async loadNavigationLinks (id) {
+      const paths = { id: id }
+      const res = await getLinkNew(paths)
+      this.dialogEditForm = res.response
+      if (res.metaInfo.code !== '200') {
+        return false
       }
-      getLink(paths).then(res => {
-        this.dialogEditForm = res.data.response
-        this.value = res.data.response.category
-      })
+      return true
     },
     // 提交修改
     loadCommitChanges (id, formData) {
@@ -289,9 +290,10 @@ export default {
         })
       })
     },
-    onHandleEdit (id) {
-      this.loadNavigationLinks(id)
-      this.dialogVisible = true
+    onHandleEdit: async function (id) {
+      if (await this.loadNavigationLinks(id)) {
+        this.dialogVisible = true
+      }
     },
     // 删除,需要处理请求成功后加载对话框
     onHandleDelete (id) {
