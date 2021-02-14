@@ -24,14 +24,17 @@
       <el-menu-item index="/hostmonitor" @click="onSaveNavState('/hostmonitor')">
         <i class="el-icon-stopwatch"></i><span slot="title">主机监控</span>
       </el-menu-item>
-      <el-menu-item index="/servicemanager" @click="onSaveNavState('/servicemanager')">
-        <i class="el-icon-mouse"></i><span slot="title">服务管理</span>
-      </el-menu-item>
-      <el-menu-item index="/cluster" @click="onSaveNavState('/cluster')">
-        <i class="el-icon-box"></i><span slot="title">集群管理</span>
-      </el-menu-item>
+      <el-submenu index="/kubernetes">
+        <template slot="title"><i class="el-icon-mouse"></i> <span>kubernetes</span></template>
+          <el-menu-item index="/kubernetes/service" @click="onSaveNavState('/kubernetes/service')">
+            <i class="el-icon-menu"></i><span slot="title">服务一览</span>
+          </el-menu-item>
+          <el-menu-item index="/kubernetes/config" @click="onSaveNavState('/kubernetes/config')">
+            <i class="el-icon-menu"></i><span slot="title">集群管理</span>
+          </el-menu-item>
+      </el-submenu>
       <el-menu-item index="/settings" @click="onSaveNavState('/settings')">
-        <i class="el-icon-menu"></i><span slot="title">个人设置</span>
+        <i class="el-icon-setting"></i><span slot="title">个人设置</span>
       </el-menu-item>
     </el-menu>
   </div>

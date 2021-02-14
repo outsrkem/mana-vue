@@ -1,21 +1,15 @@
 <template>
   <div >
-    <!--
-    Card 卡片
-    将信息聚合在卡片容器中展示。
-    -->
+    <div class="link-breadcrumb-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }" ><span @click="onToNewPath('/')">首页</span></el-breadcrumb-item>
+        <el-breadcrumb-item>kubernetes</el-breadcrumb-item>
+        <el-breadcrumb-item>服务一览</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-card class="box-card" :body-style="{ 'padding-top': '10px' }">
       <div class="control-header">
-        <div>
-          <el-row>
-            <!--面包屑导航-->
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-              <el-breadcrumb-item>服务管理</el-breadcrumb-item>
-            </el-breadcrumb>
-            <!--/面包屑导航-->
-          </el-row>
-        </div>
+        <div><span></span></div>
         <div>
           <el-row>
             <el-select size="small" v-model="clusterId" @change="onClusterIdChange()" filterable placeholder="请选择">

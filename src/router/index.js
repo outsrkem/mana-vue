@@ -19,9 +19,9 @@ const linkList = () => import('@/views/navigation/linkList.vue')
 const linkEdit = () => import('@/views/navigation/linkEdit.vue')
 const linkCreate = () => import('@/views/navigation/linkCreate.vue')
 const HostMonitor = () => import('@/views/hostmonitor/index')
-const ServiceManager = () => import('@/views/servicemanager/index')
+const Service = () => import('@/views/kubernetes/service.vue')
+const Config = () => import('@/views/kubernetes/config.vue')
 const Settings = () => import('@/views/settings/')
-const Cluster = () => import('@/views/kubernetes/cluster/index')
 
 Vue.use(VueRouter)
 
@@ -48,9 +48,9 @@ const routes = [
       { path: '/link/edit', name: 'linkEdit', component: linkEdit },
       { path: '/link/create', name: 'linkCreate', component: linkCreate },
       { path: '/hostmonitor', name: 'HostMonitor', component: HostMonitor },
-      { path: '/cluster', name: 'Cluster', component: Cluster },
-      { path: '/servicemanager', name: 'ServiceManager', component: ServiceManager },
-      { path: '/settings', name: 'settings', component: Settings }
+      { path: '/settings', name: 'settings', component: Settings },
+      { path: '/kubernetes/service', name: 'kubernetesService', component: Service },
+      { path: '/kubernetes/config', name: 'kubernetesConfig', component: Config }
     ]
   }
 ]

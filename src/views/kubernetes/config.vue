@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="link-breadcrumb-container">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }" ><span @click="onToNewPath('/')">首页</span></el-breadcrumb-item>
+        <el-breadcrumb-item>kubernetes</el-breadcrumb-item>
+        <el-breadcrumb-item>集群管理</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!--
     Card 卡片
     将信息聚合在卡片容器中展示。
