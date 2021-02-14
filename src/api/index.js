@@ -10,9 +10,7 @@ import ajax from '@/api/ajax'
  * @param {*} params 请求参数，默认为空对象
  * @param {*} data 请求参数，默认为空对象
  */
-/**
- *********************************用户相关****************************************************
- */
+/** *********************************用户相关**************************************************** */
 /**
  * 用户登录
  * @param {*} data 登录请求体：{username: "lis", password: "123456"}
@@ -25,9 +23,7 @@ export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, d
  */
 export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
 
-/**
- *********************************导航链接****************************************************
- */
+/** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录
  * @param {*} paths 路径参数:{id: "xx"}
@@ -59,18 +55,14 @@ export const deleteLink = (paths) => ajax(`/api/v1/common/navigation/links/${pat
  */
 export const addLink = (data) => ajax('/api/v1/common/navigation/links', 'POST', null, data)
 
-/**
- *********************************主机监控****************************************************
- */
+/** *********************************主机监控**************************************************** */
 /**
  * 获取主机监控信息
  * @param {*} params 查询参数
  */
 export const getHostMonitor = (params) => ajax('/api/v1/common/resource/monitor', 'GET', params)
 
-/**
- *********************************kubernetes****************************************************
- */
+/** *********************************kubernetes**************************************************** */
 /**
  * 获取集群列表
  * @param {*} params 查询参数
@@ -79,15 +71,15 @@ export const getCluster = (params) => ajax('/api/v1/common/kubernetes/cluster', 
 
 /**
  * 添加集群
- * @param {*} data k8s 集群鉴权文件
+ * @param {*} data k8s 集群鉴权文件 json
  */
 export const addCluster = (data) => ajax('/api/v1/common/kubernetes/cluster', 'POST', null, data)
 
 /**
  * 删除集群配置
- * @param {*} params
+ * @param {*} paths {config_id: "xx"} 要删除的配置的
  */
-export const deleteCluster = (params) => ajax('/api/v1/common/kubernetes/cluster', 'DELETE', params)
+export const deleteCluster = (paths) => ajax(`/api/v1/common/kubernetes/cluster/${paths.config_id}`, 'DELETE')
 
 /**
  * 获取集群名称空间

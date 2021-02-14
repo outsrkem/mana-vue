@@ -105,8 +105,8 @@ export default {
     },
     // 发送删除集群请求
     deleteClusterRequest: async function (clusterConfigId) {
-      const params = { config_id: clusterConfigId }
-      await deleteCluster(params).then(res => {
+      const paths = { config_id: clusterConfigId }
+      await deleteCluster(paths).then(res => {
         this.onRefresh()
         this.$notify({ duration: 700, title: '删除集群成功', message: 'Delete successful', type: 'success' })
       }).catch(err => {
