@@ -13,15 +13,15 @@ import cookie from 'js-cookie'
  * webpackChunkName 可以为js文件定义名称，若不写则显示其他
  */
 const Login = () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue')
-const Home = () => import('@/views/home/index.vue')
-const Layout = () => import('@/views/layout/index.vue')
-const linkList = () => import('@/views/navigation/linkList.vue')
-const linkEdit = () => import('@/views/navigation/linkEdit.vue')
-const linkCreate = () => import('@/views/navigation/linkCreate.vue')
+const Home = () => import(/* webpackChunkName: "home" */ '@/views/home/index.vue')
+const Layout = () => import(/* webpackChunkName: "home" */ '@/views/layout/index.vue')
+const linkList = () => import(/* webpackChunkName: "link" */ '@/views/navigation/linkList.vue')
+const linkEdit = () => import(/* webpackChunkName: "link" */ '@/views/navigation/linkEdit.vue')
+const linkCreate = () => import(/* webpackChunkName: "link" */ '@/views/navigation/linkCreate.vue')
 const HostMonitor = () => import('@/views/hostmonitor/index')
-const Service = () => import('@/views/kubernetes/service.vue')
-const Config = () => import('@/views/kubernetes/config.vue')
-const Settings = () => import('@/views/settings/')
+const Service = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubernetes/service.vue')
+const Config = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubernetes/config.vue')
+const Settings = () => import(/* webpackChunkName: "kubernete" */ '@/views/settings/')
 
 Vue.use(VueRouter)
 
