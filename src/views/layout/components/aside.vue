@@ -6,7 +6,7 @@
   <div class="el-aside">
     <el-menu :default-active="activePath" router unique-opened>
       <el-menu-item index="/" @click="onSaveNavState('/')">
-        <i class="el-icon-setting"></i><span slot="title">首页</span>
+        <i class="el-icon-house"></i><span slot="title">首页</span>
       </el-menu-item>
       <!-- 可折叠导航链接 -->
       <el-submenu index="/link">
