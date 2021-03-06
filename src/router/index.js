@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import cookie from 'js-cookie'
 
 /**
  * 在 VueCLI 创建的项目中 @ 表示 src 目录
@@ -75,10 +74,10 @@ router.beforeEach((to, from, next) => {
    * next()
    * const user = JSON.parse(window.localStorage.getItem('user'))
    */
-  const token = cookie.get('authentication-token')
+  const authentication = JSON.parse(window.localStorage.getItem('authentication'))
   // 校验非登录页面的登录状态
   if (to.path !== '/login') {
-    if (token) {
+    if (authentication) {
       // 已登录，允许通过
       next()
     } else {

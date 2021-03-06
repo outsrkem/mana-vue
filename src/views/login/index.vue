@@ -79,9 +79,15 @@ export default {
       })
       this.loginLoading = false
       if (res.metaInfo.code === '200') {
-        // 登录成功后保存信息到cookies，浏览器关闭后删除
+        /**
+         * 登录成功后保存信息到cookies，浏览器关闭后删除
+         * 保存 token 到 localStorage，退出删除，涉及到的改动有：
+         * 1、登录界面，退出界面  src/views/layout/index.vue ， src/views/login/index.vue
+         * 2、 src/utils/request.js
+         * 3、src/router/index.js
+         */
         const response = res.response
-        this.$cookies.set('authentication-token', response.token, '0')
+        window.localStorage.setItem('authentication', JSON.stringify({ token: response.token }))
         this.$cookies.set('userid', response.userid, '0')
         this.$cookies.set('nickname', response.nickname, '0')
         this.$router.push({ /* 这个 name 是路由的名字 */ name: 'home' })

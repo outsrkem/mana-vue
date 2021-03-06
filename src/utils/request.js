@@ -2,7 +2,6 @@
  * 基于 axios 封装的请求模块
  */
 import axios from 'axios'
-import cookie from 'js-cookie'
 import router from '@/router'
 
 // 非组件模块可以这样加载使用 element 的 message 提示组件
@@ -27,9 +26,9 @@ request.interceptors.request.use(
   function (config) {
     // 如果有登录用户信息，则统一设置 token
     // 获取Cookie中的token
-    const token = cookie.get('authentication-token')
-    if (token) {
-      config.headers['X-Auth-Token'] = `${token}`
+    const authentication = JSON.parse(window.localStorage.getItem('authentication'))
+    if (authentication) {
+      config.headers['X-Auth-Token'] = `${authentication.token}`
       config.headers['Content-Type'] = 'application/json;charset=utf-8'
     }
     // 当这里 return config 之后请求在会真正的发出去
@@ -52,7 +51,7 @@ request.interceptors.response.use(function (response) {
   if (status === 401) {
     // 跳转到登录页面
     // 清除本地存储中的用户登录状态
-    cookie.remove('authentication-token')
+    window.localStorage.removeItem('authentication')
     router.push('/login')
     Message.error('登录状态无效，请重新登录')
     return error.response

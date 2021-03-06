@@ -80,9 +80,8 @@ export default {
       // MessageBox 弹框
       this.$confirm('确认退出吗？', '退出提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         // 把用户的登录状态清除和active-path
-        window.localStorage.removeItem('user')
+        window.localStorage.removeItem('authentication')
         window.sessionStorage.removeItem('active-path')
-
         // 跳转到登录页面
         this.$router.push('/login')
       }).catch(() => {})
