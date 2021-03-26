@@ -9,7 +9,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://www.yonge.com:443/api',
+        target: 'https://yongge.outsrkem.top:443/api',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
