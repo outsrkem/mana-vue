@@ -26,6 +26,22 @@
                 <el-button size="small" type="primary" @click="onUpdateUserInfo">确 定</el-button>
               </span>
             </el-dialog>
+            <el-button size="small" type="primary" style="margin-left: 15px;" @click="dialogChangePassword = true">修改密码</el-button>
+            <el-dialog title="编辑个人资料" :visible.sync="dialogChangePassword" width="40%" :before-close="handleClose" append-to-body>
+              <el-form ref="form" :model="user" label-width="100px">
+                <el-form-item label="原密码："><el-input v-model="user.username"></el-input></el-form-item>
+                <el-form-item label="新密码："><el-input v-model="user.nickname"></el-input></el-form-item>
+                <el-form-item label="重复新密码："><el-input v-model="user.email"></el-input></el-form-item>
+                <el-form-item label="验证码："><el-input v-model="user.email"></el-input></el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogChangePassword = false">取 消</el-button>
+                <el-button size="small" type="primary" @click="onUpdateUserInfo">确 定</el-button>
+              </span>
+            </el-dialog>
+            <el-button size="small" type="primary" style="margin-left: 15px;" @click="dialogVisible = true">更换电话</el-button>
+            <el-button size="small" type="primary" style="margin-left: 15px;" @click="dialogVisible = true">更换邮箱</el-button>
+            <el-button size="small" type="primary" style="margin-left: 15px;" @click="dialogVisible = true">注销用户</el-button>
           </el-row>
         </div>
         <!--刷新按钮-->
@@ -63,7 +79,8 @@ export default {
   data () {
     return {
       user: {},
-      dialogVisible: false
+      dialogVisible: false,
+      dialogChangePassword: false
     }
   },
   computed: {},
