@@ -22,7 +22,8 @@
         <!--功能按钮-->
         <el-row class="box-card-header">
           <el-button size="small" type="primary" @click="dialogVisible = true">添加集群</el-button>
-          <el-dialog title="添加集群鉴权文件" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" append-to-body>
+          <el-dialog title="添加集群鉴权文件" :visible.sync="dialogVisible" width="30%"
+          :before-close="handleClose" :close-on-click-modal="false" append-to-body>
             <el-input type="textarea" placeholder="只支持json格式内容" v-model="clusterConfig" :autosize="{ minRows: 2, maxRows: 9}"/>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>

@@ -11,7 +11,8 @@
         <div>
           <el-row class="box-card-header">
             <el-button size="small" type="primary" @click="dialogVisible = true">编辑资料</el-button>
-            <el-dialog title="编辑个人资料" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" append-to-body>
+            <el-dialog title="编辑个人资料" :visible.sync="dialogVisible" width="40%"
+            :before-close="handleClose" append-to-body :close-on-click-modal="false">
               <el-form ref="form" :model="user" label-width="100px">
                 <el-form-item label="用户名称："><el-input v-model="user.username"></el-input></el-form-item>
                 <el-form-item label="用户昵称："><el-input v-model="user.nickname"></el-input></el-form-item>
@@ -27,7 +28,8 @@
               </span>
             </el-dialog>
             <el-button size="small" type="primary" style="margin-left: 15px;" @click="dialogChangePassword = true">修改密码</el-button>
-            <el-dialog title="编辑个人资料" :visible.sync="dialogChangePassword" width="40%" :before-close="handleClose" append-to-body>
+            <el-dialog title="编辑个人资料" :visible.sync="dialogChangePassword" width="40%"
+            :before-close="handleClose" append-to-body :close-on-click-modal="false">
               <el-form ref="form" :model="user" label-width="100px">
                 <el-form-item label="原密码："><el-input v-model="user.username"></el-input></el-form-item>
                 <el-form-item label="新密码："><el-input v-model="user.nickname"></el-input></el-form-item>
