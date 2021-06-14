@@ -9,38 +9,19 @@
         <i class="el-icon-house"></i><span slot="title">首页</span>
       </el-menu-item>
       <!-- 可折叠导航链接 -->
-      <el-submenu index="/link">
-        <template slot="title"><i class="el-icon-link"></i> <span>导航链接</span></template>
-          <el-menu-item index="/link/list" @click="onSaveNavState('/link/list')">
-            <i class="el-icon-menu"></i><span slot="title">链接浏览</span>
-          </el-menu-item>
-          <el-menu-item index="/link/edit" @click="onSaveNavState('/link/edit')">
-            <i class="el-icon-menu"></i><span slot="title">链接编辑</span>
-          </el-menu-item>
-          <el-menu-item index="/link/create" @click="onSaveNavState('/link/create')">
-            <i class="el-icon-menu"></i><span slot="title">添加链接</span>
+      <!-- @click="onSaveNavState(subItem.path)" 用于保存当前展开的菜单 -->
+      <el-submenu :index="item.id + ''" v-for="item in menusList" :key="item.id">
+        <template slot="title"><i class="el-icon-link"></i> <span>{{ item.name}}</span></template>
+          <el-menu-item :index="subItem.path" v-for="subItem in item.leafNode" :key="subItem.id" @click="onSaveNavState(subItem.path)">
+            <i class="el-icon-menu"></i><span slot="title">{{ subItem.name}}</span>
           </el-menu-item>
       </el-submenu>
-      <el-menu-item index="/hostmonitor" @click="onSaveNavState('/hostmonitor')">
-        <i class="el-icon-stopwatch"></i><span slot="title">主机监控</span>
-      </el-menu-item>
-      <el-submenu index="/kubernetes">
-        <template slot="title"><i class="el-icon-mouse"></i> <span>kubernetes</span></template>
-          <el-menu-item index="/kubernetes/service" @click="onSaveNavState('/kubernetes/service')">
-            <i class="el-icon-menu"></i><span slot="title">服务一览</span>
-          </el-menu-item>
-          <el-menu-item index="/kubernetes/config" @click="onSaveNavState('/kubernetes/config')">
-            <i class="el-icon-menu"></i><span slot="title">集群管理</span>
-          </el-menu-item>
-      </el-submenu>
-      <el-menu-item index="/settings" @click="onSaveNavState('/settings')">
-        <i class="el-icon-setting"></i><span slot="title">个人设置</span>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
+import { getMenus } from '@/api/index.js'
 import globalBus from '@/utils/global-bus'
 export default {
   name: 'AppAside',
@@ -48,7 +29,8 @@ export default {
   props: {},
   data () {
     return {
-      activePath: ''
+      activePath: '',
+      menusList: []
     }
   },
   computed: {},
@@ -63,6 +45,8 @@ export default {
     globalBus.$on('update-active-path', (data) => {
       this.activePath = data
     })
+    // 获取菜单
+    this.loadMenuList()
   },
   mounted () {},
   methods: {
@@ -70,6 +54,12 @@ export default {
     onSaveNavState (activePath) {
       this.activePath = activePath
       window.sessionStorage.setItem('active-path', activePath)
+    },
+    // 获取菜单
+    async loadMenuList () {
+      await getMenus().then(res => {
+        this.menusList = res.response.items
+      })
     }
   }
 }

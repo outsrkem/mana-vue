@@ -23,6 +23,12 @@ export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, d
  */
 export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
 
+/**
+ * 查询菜单列表
+ * @returns
+ */
+export const getMenus = () => ajax('/api/v1/common/menus/list')
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录
