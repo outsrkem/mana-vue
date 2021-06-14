@@ -21,6 +21,9 @@ const HostMonitor = () => import('@/views/hostmonitor/index')
 const Service = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubernetes/service.vue')
 const Config = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubernetes/config.vue')
 const Settings = () => import(/* webpackChunkName: "kubernete" */ '@/views/settings/')
+const SystemRole = () => import(/* webpackChunkName: "system" */ '@/views/system/role.vue')
+const SystemMenus = () => import(/* webpackChunkName: "system" */ '@/views/system/menus.vue')
+const SystemAuth = () => import(/* webpackChunkName: "system" */ '@/views/system/auth.vue')
 
 Vue.use(VueRouter)
 
@@ -42,14 +45,20 @@ const routes = [
     path: '/',
     component: Layout,
     children: [
+      /**
+       * component 代表要加载那个页面
+       */
       { path: '', /* path 为空，会作为默认子路由渲染 */ name: 'home', component: Home },
       { path: '/link/list', name: 'linkList', component: linkList },
       { path: '/link/edit', name: 'linkEdit', component: linkEdit },
       { path: '/link/create', name: 'linkCreate', component: linkCreate },
-      { path: '/hostmonitor', name: 'HostMonitor', component: HostMonitor },
-      { path: '/settings', name: 'settings', component: Settings },
+      { path: '/cms/hostmonitor', name: 'HostMonitor', component: HostMonitor },
+      { path: '/system/setting', name: 'settings', component: Settings },
       { path: '/kubernetes/service', name: 'kubernetesService', component: Service },
-      { path: '/kubernetes/config', name: 'kubernetesConfig', component: Config }
+      { path: '/kubernetes/config', name: 'kubernetesConfig', component: Config },
+      { path: '/system/role', name: 'systemRole', component: SystemRole },
+      { path: '/system/menus', name: 'systemMenus', component: SystemMenus },
+      { path: '/system/auth', name: 'systemAuth', component: SystemAuth }
     ]
   }
 ]
