@@ -19,7 +19,9 @@
           <!-- 菜单弹出框开始 -->
             <el-dialog title="添加角色" :visible.sync="dialogVisibleRoleAdd" width="50%"
             :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-              <el-input type="textarea" placeholder='{"role_name":"角色名称","role_desc":"角色描述"}' v-model="new_role_raw" :autosize="{ minRows: 2, maxRows: 9}"/>
+              <el-input type="text" placeholder="请输入角色名称" v-model="new_role_raw.role_name" maxlength="10" show-word-limit/>
+                  <div style="margin: 20px 0;"></div>
+              <el-input type="textarea" placeholder="请输入角色描述" v-model="new_role_raw.role_desc" maxlength="30" show-word-limit/>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleAdd = false">取 消</el-button>
                 <el-button type="primary" @click="onAddRole">确 定</el-button>
@@ -107,7 +109,10 @@ export default {
       pageTotal: 0,
       currentPage: 1,
       roleList: [],
-      new_role_raw: null,
+      new_role_raw: {
+        role_name: null,
+        role_desc: null
+      },
       roleData: [{
         id: 1,
         label: '一级 1',
@@ -173,7 +178,7 @@ export default {
       }).catch(err => {
         this.$notify({ title: '添加失败', message: err, type: 'error' })
       })
-      this.new_role_raw = null
+      this.new_role_raw = {}
     },
     handleClose (_) {
       this.dialogVisibleRoleAdd = false
