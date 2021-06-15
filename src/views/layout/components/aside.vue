@@ -10,7 +10,7 @@
       </el-menu-item>
       <!-- 可折叠导航链接 -->
       <!-- @click="onSaveNavState(subItem.path)" 用于保存当前展开的菜单 -->
-      <el-submenu :index="item.id + ''" v-for="item in menusList" :key="item.id">
+      <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
         <template slot="title"><i class="el-icon-link"></i> <span>{{ item.name}}</span></template>
           <el-menu-item :index="subItem.path" v-for="subItem in item.leafNode" :key="subItem.id" @click="onSaveNavState(subItem.path)">
             <i class="el-icon-menu"></i><span slot="title">{{ subItem.name}}</span>

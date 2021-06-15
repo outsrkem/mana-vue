@@ -18,10 +18,10 @@ export default {
   name: 'NavigationLinks',
   components: {},
   data () {
-    return {}
+    return { }
   },
   computed: { },
-  filters: {},
+  filters: { },
   watch: {},
   created () {},
   mounted () {},

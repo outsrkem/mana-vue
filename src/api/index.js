@@ -29,6 +29,18 @@ export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + us
  */
 export const getMenus = () => ajax('/api/v1/common/menus/list')
 
+/**
+ * 获取角色列表
+ * @returns
+ */
+export const getRoleList = () => ajax('/api/v1/common/system/role')
+
+/**
+ * 添加角色
+ * @param {*} data 添加角色请求体 {"role_name":"角色名称","role_desc":"角色描述"}
+ */
+export const addRole = (data) => ajax('/api/v1/common/system/role', 'POST', null, data)
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录

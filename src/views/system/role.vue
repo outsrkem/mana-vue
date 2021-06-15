@@ -19,10 +19,10 @@
           <!-- 菜单弹出框开始 -->
             <el-dialog title="添加角色" :visible.sync="dialogVisibleRoleAdd" width="50%"
             :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-              <template>添加角色</template>
+              <el-input type="textarea" placeholder='{"role_name":"角色名称","role_desc":"角色描述"}' v-model="new_role_raw" :autosize="{ minRows: 2, maxRows: 9}"/>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleAdd = false">取 消</el-button>
-                <el-button type="primary" @click="onAddCluster">确 定</el-button>
+                <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
             <el-dialog title="查看权限" :visible.sync="dialogVisibleRoleList" width="50%"
@@ -34,7 +34,7 @@
               </el-tree>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleList = false">取 消</el-button>
-                <el-button type="primary" @click="onAddCluster">确 定</el-button>
+                <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
             <el-dialog title="修改权限" :visible.sync="dialogVisibleRoleUpdate" width="50%"
@@ -42,7 +42,7 @@
               <template>添加角色</template>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleUpdate = false">取 消</el-button>
-                <el-button type="primary" @click="onAddCluster">确 定</el-button>
+                <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
             <el-dialog title="删除角色" :visible.sync="dialogVisibleRoleDelete" width="50%"
@@ -50,7 +50,7 @@
               <template>添加角色</template>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleDelete = false">取 消</el-button>
-                <el-button type="primary" @click="onAddCluster">确 定</el-button>
+                <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
           <!-- 菜单弹出框结束 -->
@@ -65,12 +65,17 @@
       <!--中间内容部分-->
       <el-table :data="roleList" style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" class="filter-card">
         <el-table-column type="selection" width="50"></el-table-column>
-        <el-table-column prop="rid" label="角色ID"/>
-        <el-table-column prop="r_name" label="角色名称"/>
-        <el-table-column prop="r_state" label="状态"/>
-        <el-table-column prop="r_desc" label="说明"/>
-        <el-table-column prop="create_time" label="创建时间"/>
-        <el-table-column prop="update_time" label="更新时间">
+        <el-table-column width="100" prop="role_id" label="角色ID"/>
+        <el-table-column prop="role_name" label="角色名称"/>
+        <el-table-column prop="role_state" label="状态"/>
+        <el-table-column prop="role_type" label="状态"/>
+        <el-table-column prop="role_desc" label="说明"/>
+        <!-- 处理时间格式 -->
+        <el-table-column label="创建时间">
+          <template slot-scope="scope"> {{ scope.row.create_time|formatDate }}</template>
+        </el-table-column>
+        <el-table-column label="更新时间">
+          <template slot-scope="scope"> {{ scope.row.update_time|formatDate }}</template>
         </el-table-column>
       </el-table>
       <!--/中间内容部分结束-->
@@ -85,6 +90,8 @@
 
 <script>
 import globalBus from '@/utils/global-bus'
+import { formatDate } from '@/utils/date.js'
+import { getRoleList, addRole } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
@@ -99,10 +106,8 @@ export default {
       pageSize: 10,
       pageTotal: 0,
       currentPage: 1,
-      roleList: [
-        { rid: '1001', r_name: 'guest', r_state: '1', r_desc: '只读', create_time: '1623540133918', update_time: '1623540133000' },
-        { rid: '1001', r_name: 'guest', r_state: '1', r_desc: '只读', create_time: '1623540133918', update_time: '1623540133000' }
-      ],
+      roleList: [],
+      new_role_raw: null,
       roleData: [{
         id: 1,
         label: '一级 1',
@@ -140,11 +145,36 @@ export default {
     }
   },
   computed: { },
-  filters: {},
+  filters: {
+    // 时间格式过滤器
+    formatDate (time) {
+      return formatDate(new Date(time))
+    }
+  },
   watch: {},
   created () {},
-  mounted () {},
+  mounted () {
+    this.loadRoleList()
+  },
   methods: {
+    loadRoleList: async function () {
+      await getRoleList().then(res => {
+        this.roleList = res.response.items
+        this.refreshLoading = false
+      }).catch(_ => {
+        this.refreshLoading = false
+      })
+    },
+    // 发送添加集群请求
+    addRoleRequest: async function (data) {
+      await addRole(data).then(res => {
+        this.onRefresh()
+        this.$notify({ title: '', message: '添加成功', type: 'success' })
+      }).catch(err => {
+        this.$notify({ title: '添加失败', message: err, type: 'error' })
+      })
+      this.new_role_raw = null
+    },
     handleClose (_) {
       this.dialogVisibleRoleAdd = false
       this.dialogVisibleRoleList = false
@@ -160,12 +190,14 @@ export default {
       this.currentPage = 1
       this.loadCluster(pageSize, 1)
     },
-    onAddCluster () {
-      console.log('添加集群')
+    onAddRole () {
+      this.dialogVisibleRoleAdd = false
+      this.addRoleRequest(this.new_role_raw)
     },
     onRefresh () {
       // 刷新页面
       this.refreshLoading = true
+      this.loadRoleList()
     },
     onCurrentChange (page) {
       console.log(page)
