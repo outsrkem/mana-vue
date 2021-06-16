@@ -41,6 +41,12 @@ export const getRoleList = () => ajax('/api/v1/common/system/role')
  */
 export const addRole = (data) => ajax('/api/v1/common/system/role', 'POST', null, data)
 
+/**
+ * 删除角色
+ * @param {*} data {"role_id":[1003,1002,1001]}
+ */
+export const deleteRole = (data) => ajax('/api/v1/common/system/role', 'DELETE', null, data)
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录

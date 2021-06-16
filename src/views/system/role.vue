@@ -47,14 +47,15 @@
                 <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
-            <el-dialog title="删除角色" :visible.sync="dialogVisibleRoleDelete" width="50%"
-            :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-              <template>添加角色</template>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisibleRoleDelete = false">取 消</el-button>
-                <el-button type="primary" @click="onAddRole">确 定</el-button>
-              </span>
+            <!-- 删除的dialog弹框 -->
+            <el-dialog title="请确认删除" :close-on-click-modal="false"
+            :visible.sync="dialogVisibleRoleDelete" width="30%" append-to-body :before-close="handleCloseDelete">
+            <span slot="footer" class="dialog-footer">
+                <el-button size="mini" @click="dialogVisibleRoleDelete = false">取 消</el-button>
+                <el-button size="mini" type="primary" @click="onSubmitCommitDelete(multipleSelectionRoleId)">确 定</el-button>
+            </span>
             </el-dialog>
+            <!-- /删除的dialog弹框 -->
           <!-- 菜单弹出框结束 -->
         </el-row>
         <!--/功能按钮-->
@@ -65,12 +66,12 @@
         <!--/刷新按钮-->
       </div>
       <!--中间内容部分-->
-      <el-table :data="roleList" style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" class="filter-card">
+      <el-table :data="roleList" style="width: 100%" v-loading="loading" @selection-change="handleSelectionChangeRole" class="filter-card">
         <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column width="100" prop="role_id" label="角色ID"/>
         <el-table-column prop="role_name" label="角色名称"/>
+        <el-table-column prop="role_type" label="类型"/>
         <el-table-column prop="role_state" label="状态"/>
-        <el-table-column prop="role_type" label="状态"/>
         <el-table-column prop="role_desc" label="说明"/>
         <!-- 处理时间格式 -->
         <el-table-column label="创建时间">
@@ -93,7 +94,7 @@
 <script>
 import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
-import { getRoleList, addRole } from '@/api/index.js'
+import { getRoleList, addRole, deleteRole } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
@@ -104,6 +105,7 @@ export default {
       dialogVisibleRoleUpdate: false,
       dialogVisibleRoleDelete: false,
       refreshLoading: false,
+      multipleSelectionRoleId: [],
       loading: null,
       pageSize: 10,
       pageTotal: 0,
@@ -170,7 +172,7 @@ export default {
         this.refreshLoading = false
       })
     },
-    // 发送添加集群请求
+    // 发送添加角色请求
     addRoleRequest: async function (data) {
       await addRole(data).then(res => {
         this.onRefresh()
@@ -180,11 +182,39 @@ export default {
       })
       this.new_role_raw = {}
     },
+    // 发送删除角色请求
+    deleteRoleRequest: async function (roleIdList) {
+      const data = { role_id: roleIdList }
+      await deleteRole(data).then(_ => {
+        this.onRefresh() /** 刷新页面 */
+        this.$notify({ duration: 1000, title: '删除成功', type: 'success' })
+      }).catch(err => {
+        this.$notify({ title: '删除失败', message: err, type: 'error' })
+      })
+    },
+    // 删除,需要处理请求成功后加载对话框
+    handleCloseDelete () {
+      this.dialogVisibleRoleDelete = false
+    },
+    // 提交删除事件
+    onSubmitCommitDelete (id) {
+      this.dialogVisibleRoleDelete = false
+      this.deleteRoleRequest(id)
+    },
+    // 获取选中的角色 id, [1003,1002,1001]
+    handleSelectionChangeRole (val) {
+      // val 为选中的详细信息，https://www.pianshen.com/article/749990274/
+      this.multipleSelectionRoleId = []
+      for (let i = 0; i < val.length; i++) {
+        if (this.multipleSelectionRoleId.indexOf(val[i].role_id) === -1) {
+          this.multipleSelectionRoleId.push(val[i].role_id)
+        }
+      }
+    },
     handleClose (_) {
       this.dialogVisibleRoleAdd = false
       this.dialogVisibleRoleList = false
       this.dialogVisibleRoleUpdate = false
-      this.dialogVisibleRoleDelete = false
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -195,6 +225,8 @@ export default {
       this.currentPage = 1
       this.loadCluster(pageSize, 1)
     },
+
+    // 添加操作
     onAddRole () {
       this.dialogVisibleRoleAdd = false
       this.addRoleRequest(this.new_role_raw)
