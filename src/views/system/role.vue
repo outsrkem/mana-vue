@@ -67,7 +67,7 @@
       </div>
       <!--中间内容部分-->
       <el-table :data="roleList" style="width: 100%" v-loading="loading" @selection-change="handleSelectionChangeRole" class="filter-card">
-        <el-table-column type="selection" width="50"></el-table-column>
+        <el-table-column type="selection" :selectable="checkSelectable" width="50"></el-table-column>
         <el-table-column width="100" prop="role_id" label="角色ID"/>
         <el-table-column prop="role_name" label="角色名称"/>
         <el-table-column prop="role_type" label="类型"/>
@@ -172,6 +172,11 @@ export default {
         this.refreshLoading = false
       })
     },
+    // 判断为系统角色则不可勾选，role_type=1 为系统角色
+    checkSelectable (row) {
+      return row.role_type !== 1
+    },
+
     // 发送添加角色请求
     addRoleRequest: async function (data) {
       await addRole(data).then(res => {
