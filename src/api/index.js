@@ -47,6 +47,12 @@ export const addRole = (data) => ajax('/api/v1/common/system/role', 'POST', null
  */
 export const deleteRole = (data) => ajax('/api/v1/common/system/role', 'DELETE', null, data)
 
+/**
+ * 获取角色授权的所有菜单
+ * @param {*} params 查询参数?rid=1002
+ */
+export const getMenuAllAndAuthorized = (params) => ajax('/api/v1/common/system/menus/list', 'GET', params)
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录

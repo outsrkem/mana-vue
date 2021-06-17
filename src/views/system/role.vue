@@ -13,7 +13,7 @@
         <!--功能按钮-->
         <el-row class="box-card-header">
           <el-button size="small" type="primary" @click="dialogVisibleRoleAdd = true">添加角色</el-button>
-          <el-button size="small" type="primary" @click="dialogVisibleRoleList = true">查看权限</el-button>
+          <el-button size="small" type="primary" @click="setCheckedKeys">查看权限</el-button>
           <el-button size="small" type="primary" @click="dialogVisibleRoleUpdate = true">修改权限</el-button>
           <el-button size="small" type="primary" @click="dialogVisibleRoleDelete = true">删除角色</el-button>
           <!-- 菜单弹出框开始 -->
@@ -28,10 +28,19 @@
               </span>
             </el-dialog>
             <el-dialog title="查看权限" :visible.sync="dialogVisibleRoleList" width="50%"
-            :before-close="handleClose" :close-on-click-modal="false" append-to-body>
+              :before-close="handleClose" :close-on-click-modal="false" append-to-body>
+              <el-select size="small" v-model="roleListOptionsId" placeholder="请选择角色">
+                <el-option
+                  v-for="item in roleListOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+                <el-button type="small" @click="ongetMenuAllAndAuthorizedRequest(1003)">查询</el-button>
               <el-tree :data="roleData" show-checkbox node-key="id"
-              :default-expanded-keys="[1, 2]"
-              :default-checked-keys="[5, 8]"
+              :default-expanded-keys="expanded"
+              :default-checked-keys="authorized"
               :props="defaultProps">
               </el-tree>
               <span slot="footer" class="dialog-footer">
@@ -94,7 +103,7 @@
 <script>
 import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
-import { getRoleList, addRole, deleteRole } from '@/api/index.js'
+import { getRoleList, addRole, deleteRole, getMenuAllAndAuthorized } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
@@ -106,47 +115,23 @@ export default {
       dialogVisibleRoleDelete: false,
       refreshLoading: false,
       multipleSelectionRoleId: [],
+      authorized: [],
+      expanded: [1, 6, 9, 10],
       loading: null,
       pageSize: 10,
       pageTotal: 0,
       currentPage: 1,
       roleList: [],
+      roleListOptions: [],
+      roleListOptionsId: [],
       new_role_raw: {
         role_name: null,
         role_desc: null
       },
-      roleData: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{ id: 9, label: '三级 1-1-1' }, { id: 10, label: '三级 1-1-2' }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      roleData: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'name'
       },
       multipleSelection: []
     }
@@ -167,6 +152,10 @@ export default {
     loadRoleList: async function () {
       await getRoleList().then(res => {
         this.roleList = res.response.items
+        this.roleListOptions = res.response.items.map(items => ({
+          value: items.role_name,
+          label: items.role_name
+        }))
         this.refreshLoading = false
       }).catch(_ => {
         this.refreshLoading = false
@@ -176,7 +165,14 @@ export default {
     checkSelectable (row) {
       return row.role_type !== 1
     },
-
+    // 获取角色授权的所有菜单
+    getMenuAllAndAuthorizedRequest: async function (rid) {
+      const params = { rid: rid }
+      await getMenuAllAndAuthorized(params).then(res => {
+        this.authorized = res.response.authorized
+        this.roleData = res.response.menu_list
+      }).catch(_ => {})
+    },
     // 发送添加角色请求
     addRoleRequest: async function (data) {
       await addRole(data).then(res => {
@@ -200,6 +196,9 @@ export default {
     // 删除,需要处理请求成功后加载对话框
     handleCloseDelete () {
       this.dialogVisibleRoleDelete = false
+    },
+    ongetMenuAllAndAuthorizedRequest (id) {
+      this.getMenuAllAndAuthorizedRequest(id)
     },
     // 提交删除事件
     onSubmitCommitDelete (id) {
@@ -235,6 +234,12 @@ export default {
     onAddRole () {
       this.dialogVisibleRoleAdd = false
       this.addRoleRequest(this.new_role_raw)
+    },
+
+    // 权限查看部分
+    setCheckedKeys (id) {
+      this.getMenuAllAndAuthorizedRequest(id)
+      this.dialogVisibleRoleList = true
     },
     onRefresh () {
       // 刷新页面
