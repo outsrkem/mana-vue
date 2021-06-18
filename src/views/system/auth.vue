@@ -13,7 +13,8 @@
         <!--功能按钮-->
         <el-row class="box-card-header">
           <el-button size="small" type="primary" @click="setCheckedKeys">菜单权限</el-button>
-          <el-button size="small" type="primary" @click="dialogVisibleRoleUpdate = true">修改权限</el-button>
+          <el-button size="small" type="primary" @click="dialogVisibleRoleUpdate = true">接口权限</el-button>
+          <el-button size="small" type="primary" @click="dialogVisibleUserAuth = true">用户权限</el-button>
           <!-- 菜单弹出框开始 -->
             <el-dialog title="查看权限" :visible.sync="dialogVisibleRoleList" width="50%"
               :before-close="handleClose" :close-on-click-modal="false" append-to-body>
@@ -44,6 +45,48 @@
                 <el-button type="primary" >确 定</el-button>
               </span>
             </el-dialog>
+
+          <el-dialog title="用户权限" :visible.sync="dialogVisibleUserAuth" width="50%"
+                     :before-close="handleClose" :close-on-click-modal="false" append-to-body>
+                <el-select size="small" v-model="userListOptionsId" placeholder="请选择角色">
+                  <el-option
+                    v-for="item in userListOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>&nbsp;
+                <el-button type="small" @click="onGetUserListRequest(userListOptionsId)">查询</el-button>
+
+            <el-table ref="multipleTable" :data="roleListData" tooltip-effect="dark"
+              style="width: 100%"
+              @selection-change="handleSelectionChangeRolelist">
+              <el-table-column
+                type="selection"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                prop="role_id"
+                label="角色ID"
+                width="120">
+
+              </el-table-column>
+              <el-table-column
+                prop="role_name"
+                label="角色"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="role_desc"
+                label="描述"
+                show-overflow-tooltip>
+              </el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisibleUserAuth = false">取 消</el-button>
+                <el-button type="primary" >确 定</el-button>
+              </span>
+          </el-dialog>
           <!-- 菜单弹出框结束 -->
         </el-row>
         <!--/功能按钮-->
@@ -82,7 +125,7 @@
 <script>
 import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
-import { getRoleList, getMenuAllAndAuthorized, UpdateRolePermission } from '@/api/index.js'
+import { getRoleList, getMenuAllAndAuthorized, UpdateRolePermission, getUserList, GetUserRoleList } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
@@ -90,6 +133,7 @@ export default {
     return {
       dialogVisibleRoleList: false,
       dialogVisibleRoleUpdate: false,
+      dialogVisibleUserAuth: false,
       refreshLoading: false,
       multipleSelectionRoleId: [],
       authorized: [],
@@ -106,7 +150,12 @@ export default {
         children: 'children',
         label: 'name'
       },
-      roleBindingData: {}
+      roleBindingData: {},
+      userListOptions: [],
+      userListOptionsId: null,
+      userAuthorized: [],
+      roleListData: [],
+      multipleSelectionRoleIdAndUser: []
     }
   },
   computed: { },
@@ -120,6 +169,7 @@ export default {
   created () {},
   mounted () {
     this.loadRoleList()
+    this.getUserListRequest()
   },
   methods: {
     loadRoleList: async function () {
@@ -146,8 +196,19 @@ export default {
         this.roleData = res.response.menu_list
       }).catch(_ => {})
     },
+    // 获取用户绑定的角色
+    GetUserRoleListRequest: async function (uid) {
+      const params = { uid: uid }
+      await GetUserRoleList(params).then(res => {
+        this.multipleSelectionRoleIdAndUser = res.response.authorized
+        this.roleListData = res.response.role_list.items
+      }).catch(_ => {})
+    },
     ongetMenuAllAndAuthorizedRequest (id) {
       this.getMenuAllAndAuthorizedRequest(id)
+    },
+    onGetUserListRequest (id) {
+      this.GetUserRoleListRequest(id)
     },
     // 获取选中的角色 id, [1003,1002,1001]
     handleSelectionChangeRole (val) {
@@ -158,6 +219,27 @@ export default {
           this.multipleSelectionRoleId.push(val[i].role_id)
         }
       }
+    },
+    // handleSelectionChangeRolelist
+    handleSelectionChangeRolelist (val) {
+      // val 为选中的详细信息，https://www.pianshen.com/article/749990274/
+      this.multipleSelectionRoleIdAndUser = []
+      for (let i = 0; i < val.length; i++) {
+        if (this.multipleSelectionRoleIdAndUser.indexOf(val[i].role_id) === -1) {
+          this.multipleSelectionRoleIdAndUser.push(val[i].role_id)
+        }
+      }
+    },
+    // 发送获取用户列表请求
+    getUserListRequest: async function () {
+      await getUserList().then(res => {
+        this.userListOptions = res.response.items.map(items => ({
+          value: items.user_id,
+          label: items.user_name
+        }))
+        //
+      }).catch(_ => {
+      })
     },
     // 发送更新角色权限的请求
     UpdateRolePermissionRequest: async function () {
@@ -173,6 +255,7 @@ export default {
       this.dialogVisibleRoleAdd = false
       this.dialogVisibleRoleList = false
       this.dialogVisibleRoleUpdate = false
+      this.dialogVisibleUserAuth = false
     },
     handleSelectionChange (val) {
       this.multipleSelection = val

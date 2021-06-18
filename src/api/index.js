@@ -24,6 +24,11 @@ export const login = (data) => ajax('/api/v1/common/user/login', 'POST', null, d
 export const getUserInfo = (userid) => ajax('/api/v1/common/user/userinfo/' + userid, null, null, null)
 
 /**
+ * 查询用户列表
+ */
+export const getUserList = () => ajax('/api/v1/common/system/user', 'GET')
+
+/**
  * 查询菜单列表
  * @returns
  */
@@ -54,10 +59,16 @@ export const deleteRole = (data) => ajax('/api/v1/common/system/role', 'DELETE',
 export const getMenuAllAndAuthorized = (params) => ajax('/api/v1/common/system/menus/list', 'GET', params)
 
 /**
- *
+ * 更新角色和菜单权限的绑定
  * @param params
  */
 export const UpdateRolePermission = (data) => ajax('/api/v1/common/system/menus/role/binding', 'PATCH', null, data)
+
+/**
+ * 获取用户绑定的角色
+ * @param params 用户id，查询参数?rid=1002
+ */
+export const GetUserRoleList = (params) => ajax('/api/v1/common/system/user/role/list', 'GET', params)
 
 /** *********************************导航链接**************************************************** */
 /**
