@@ -13,8 +13,6 @@
         <!--功能按钮-->
         <el-row class="box-card-header">
           <el-button size="small" type="primary" @click="dialogVisibleRoleAdd = true">添加角色</el-button>
-          <el-button size="small" type="primary" @click="setCheckedKeys">查看权限</el-button>
-          <el-button size="small" type="primary" @click="dialogVisibleRoleUpdate = true">修改权限</el-button>
           <el-button size="small" type="primary" @click="dialogVisibleRoleDelete = true">删除角色</el-button>
           <!-- 菜单弹出框开始 -->
             <el-dialog title="添加角色" :visible.sync="dialogVisibleRoleAdd" width="50%"
@@ -24,35 +22,6 @@
               <el-input type="textarea" placeholder="请输入角色描述" v-model="new_role_raw.role_desc" maxlength="30" show-word-limit/>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleRoleAdd = false">取 消</el-button>
-                <el-button type="primary" @click="onAddRole">确 定</el-button>
-              </span>
-            </el-dialog>
-            <el-dialog title="查看权限" :visible.sync="dialogVisibleRoleList" width="50%"
-              :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-              <el-select size="small" v-model="roleListOptionsId" placeholder="请选择角色">
-                <el-option
-                  v-for="item in roleListOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-                <el-button type="small" @click="ongetMenuAllAndAuthorizedRequest(1003)">查询</el-button>
-              <el-tree :data="roleData" show-checkbox node-key="id"
-              :default-expanded-keys="expanded"
-              :default-checked-keys="authorized"
-              :props="defaultProps">
-              </el-tree>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisibleRoleList = false">取 消</el-button>
-                <el-button type="primary" @click="onAddRole">确 定</el-button>
-              </span>
-            </el-dialog>
-            <el-dialog title="修改权限" :visible.sync="dialogVisibleRoleUpdate" width="50%"
-            :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-              <template>添加角色</template>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisibleRoleUpdate = false">取 消</el-button>
                 <el-button type="primary" @click="onAddRole">确 定</el-button>
               </span>
             </el-dialog>
@@ -103,35 +72,23 @@
 <script>
 import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
-import { getRoleList, addRole, deleteRole, getMenuAllAndAuthorized } from '@/api/index.js'
+import { getRoleList, addRole, deleteRole } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
   data () {
     return {
       dialogVisibleRoleAdd: false,
-      dialogVisibleRoleList: false,
-      dialogVisibleRoleUpdate: false,
       dialogVisibleRoleDelete: false,
       refreshLoading: false,
-      multipleSelectionRoleId: [],
-      authorized: [],
-      expanded: [1, 6, 9, 10],
       loading: null,
       pageSize: 10,
       pageTotal: 0,
       currentPage: 1,
       roleList: [],
-      roleListOptions: [],
-      roleListOptionsId: [],
       new_role_raw: {
         role_name: null,
         role_desc: null
-      },
-      roleData: [],
-      defaultProps: {
-        children: 'children',
-        label: 'name'
       },
       multipleSelection: []
     }
@@ -164,14 +121,6 @@ export default {
     // 判断为系统角色则不可勾选，role_type=1 为系统角色
     checkSelectable (row) {
       return row.role_type !== 1
-    },
-    // 获取角色授权的所有菜单
-    getMenuAllAndAuthorizedRequest: async function (rid) {
-      const params = { rid: rid }
-      await getMenuAllAndAuthorized(params).then(res => {
-        this.authorized = res.response.authorized
-        this.roleData = res.response.menu_list
-      }).catch(_ => {})
     },
     // 发送添加角色请求
     addRoleRequest: async function (data) {
@@ -236,11 +185,6 @@ export default {
       this.addRoleRequest(this.new_role_raw)
     },
 
-    // 权限查看部分
-    setCheckedKeys (id) {
-      this.getMenuAllAndAuthorizedRequest(id)
-      this.dialogVisibleRoleList = true
-    },
     onRefresh () {
       // 刷新页面
       this.refreshLoading = true

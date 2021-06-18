@@ -53,6 +53,12 @@ export const deleteRole = (data) => ajax('/api/v1/common/system/role', 'DELETE',
  */
 export const getMenuAllAndAuthorized = (params) => ajax('/api/v1/common/system/menus/list', 'GET', params)
 
+/**
+ *
+ * @param params
+ */
+export const UpdateRolePermission = (data) => ajax('/api/v1/common/system/menus/role/binding', 'PATCH', null, data)
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录
