@@ -70,6 +70,12 @@ export const UpdateRolePermission = (data) => ajax('/api/v1/common/system/menus/
  */
 export const GetUserRoleList = (params) => ajax('/api/v1/common/system/user/role/list', 'GET', params)
 
+/**
+ * 更新用户绑定的角色
+ * @param date {"user_id":"5b4b0238d6e04c319c966aac6cd813a1","role_id":[1002]}
+ */
+export const UpdateUserRole = (date) => ajax('/api/v1/common/system/user/role/binding', 'PATCH', null, date)
+
 /** *********************************导航链接**************************************************** */
 /**
  * 查询单条记录

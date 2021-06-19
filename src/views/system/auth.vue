@@ -58,33 +58,11 @@
                 </el-select>&nbsp;
                 <el-button type="small" @click="onGetUserListRequest(userListOptionsId)">查询</el-button>
 
-            <el-table ref="multipleTable" :data="roleListData" tooltip-effect="dark"
-              style="width: 100%"
-              @selection-change="handleSelectionChangeRolelist">
-              <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                prop="role_id"
-                label="角色ID"
-                width="120">
+            <el-transfer :titles="['未绑定角色', '已绑定角色']" v-model="multipleSelectionRoleIdAndUser" :data="roleListAlignData"></el-transfer>
 
-              </el-table-column>
-              <el-table-column
-                prop="role_name"
-                label="角色"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="role_desc"
-                label="描述"
-                show-overflow-tooltip>
-              </el-table-column>
-            </el-table>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleUserAuth = false">取 消</el-button>
-                <el-button type="primary" >确 定</el-button>
+                <el-button type="primary" @click="UpdateUserRoleRequest">确 定</el-button>
               </span>
           </el-dialog>
           <!-- 菜单弹出框结束 -->
@@ -125,7 +103,7 @@
 <script>
 import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
-import { getRoleList, getMenuAllAndAuthorized, UpdateRolePermission, getUserList, GetUserRoleList } from '@/api/index.js'
+import { getRoleList, getMenuAllAndAuthorized, UpdateRolePermission, getUserList, GetUserRoleList, UpdateUserRole } from '@/api/index.js'
 export default {
   name: 'SystemRole',
   components: {},
@@ -155,7 +133,8 @@ export default {
       userListOptionsId: null,
       userAuthorized: [],
       roleListData: [],
-      multipleSelectionRoleIdAndUser: []
+      multipleSelectionRoleIdAndUser: [],
+      roleListAlignData: []
     }
   },
   computed: { },
@@ -202,6 +181,12 @@ export default {
       await GetUserRoleList(params).then(res => {
         this.multipleSelectionRoleIdAndUser = res.response.authorized
         this.roleListData = res.response.role_list.items
+
+        this.roleListAlignData = res.response.role_list.items.map(items => ({
+          key: items.role_id,
+          label: items.role_name,
+          disabled: false
+        }))
       }).catch(_ => {})
     },
     ongetMenuAllAndAuthorizedRequest (id) {
@@ -249,6 +234,19 @@ export default {
         this.$notify({ duration: 1000, title: '删除成功', type: 'success' })
       }).catch(err => {
         this.$notify({ title: '删除失败', message: err, type: 'error' })
+      })
+    },
+
+    // 发送更新用户绑定角色的请求
+    UpdateUserRoleRequest: async function () {
+      const roleBindingData = { user_id: this.userListOptionsId, role_id: this.multipleSelectionRoleIdAndUser }
+      await UpdateUserRole(roleBindingData).then(_ => {
+        this.onRefresh() /** 刷新页面 */
+        this.roleListAlignData = []
+        this.multipleSelectionRoleIdAndUser = []
+        this.$notify({ duration: 1000, title: '更新成功', type: 'success' })
+      }).catch(err => {
+        this.$notify({ title: '更新失败', message: err, type: 'error' })
       })
     },
     handleClose (_) {

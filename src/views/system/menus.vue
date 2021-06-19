@@ -8,7 +8,6 @@
         <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-菜单管理
   </div>
 </template>
 
@@ -18,15 +17,69 @@ export default {
   name: 'NavigationLinks',
   components: {},
   data () {
-    return {}
+    return {
+      tableGateData: [
+        {
+          name: '刘大',
+          nameId: 1,
+          deptname: '内科',
+          level: '主任医生'
+        },
+        {
+          name: '刘二',
+          nameId: 2,
+          deptname: '内科',
+          level: '主任医生'
+        },
+        {
+          name: '刘三',
+          nameId: 3,
+          deptname: '内科',
+          level: '主任医生'
+        },
+        {
+          name: '刘四',
+          nameId: 4,
+          deptname: '内科',
+          level: '主任医生'
+        },
+        {
+          name: '刘五',
+          nameId: 5,
+          deptname: '内科',
+          level: '主任医生'
+        }],
+      docSelection: [
+        {
+          name: '刘二',
+          nameId: 2,
+          deptname: '内科',
+          level: '主任医生'
+        },
+        {
+          name: '刘四',
+          nameId: 4,
+          deptname: '内科',
+          level: '主任医生'
+        }]
+    }
   },
   computed: { },
   filters: {},
   watch: {},
   created () {},
-  mounted () {},
+  mounted () {
+    const arr = []
+    this.docList.forEach(item => {
+      this.docSelection.forEach(val => {
+        if (val.nameId === item.nameId) {
+          arr.push(item)
+        }
+      })
+    })
+    this.toggleSelection(arr)
+  },
   methods: {
-
     onToNewPath (path) {
       this.$router.push(path)
       // 通过消息更新激活状态
