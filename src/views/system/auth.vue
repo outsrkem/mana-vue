@@ -48,7 +48,7 @@
 
           <el-dialog title="用户权限" :visible.sync="dialogVisibleUserAuth" width="50%"
                      :before-close="handleClose" :close-on-click-modal="false" append-to-body>
-                <el-select size="small" v-model="userListOptionsId" placeholder="请选择角色">
+                <el-select size="small" v-model="userListOptionsId" placeholder="请选择用户">
                   <el-option
                     v-for="item in userListOptions"
                     :key="item.value"
