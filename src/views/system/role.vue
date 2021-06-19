@@ -74,7 +74,7 @@ import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
 import { getRoleList, addRole, deleteRole } from '@/api/index.js'
 export default {
-  name: 'SystemRole',
+  name: 'SystemRoleConfig',
   components: {},
   data () {
     return {

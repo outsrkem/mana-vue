@@ -105,7 +105,7 @@ import globalBus from '@/utils/global-bus'
 import { formatDate } from '@/utils/date.js'
 import { getRoleList, getMenuAllAndAuthorized, UpdateRolePermission, getUserList, GetUserRoleList, UpdateUserRole } from '@/api/index.js'
 export default {
-  name: 'SystemRole',
+  name: 'SystemAuthConfig',
   components: {},
   data () {
     return {

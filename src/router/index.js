@@ -22,6 +22,7 @@ const Service = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubern
 const Config = () => import(/* webpackChunkName: "kubernete" */ '@/views/kubernetes/config.vue')
 const Settings = () => import(/* webpackChunkName: "kubernete" */ '@/views/settings/')
 const SystemRole = () => import(/* webpackChunkName: "system" */ '@/views/system/role.vue')
+const SystemUsers = () => import(/* webpackChunkName: "system" */ '@/views/system/users.vue')
 const SystemMenus = () => import(/* webpackChunkName: "system" */ '@/views/system/menus.vue')
 const SystemAuth = () => import(/* webpackChunkName: "system" */ '@/views/system/auth.vue')
 
@@ -57,6 +58,7 @@ const routes = [
       { path: '/kubernetes/service', name: 'kubernetesService', component: Service },
       { path: '/kubernetes/config', name: 'kubernetesConfig', component: Config },
       { path: '/system/role', name: 'systemRole', component: SystemRole },
+      { path: '/system/users', name: 'systemUsers', component: SystemUsers },
       { path: '/system/menus', name: 'systemMenus', component: SystemMenus },
       { path: '/system/auth', name: 'systemAuth', component: SystemAuth }
     ]

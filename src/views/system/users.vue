@@ -4,7 +4,7 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }"><span @click="onToNewPath('/')">首页</span></el-breadcrumb-item>
         <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-        <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
   </div>
@@ -13,7 +13,7 @@
 <script>
 import globalBus from '@/utils/global-bus'
 export default {
-  name: 'SystemMenusConfig',
+  name: 'SystemUsersConfig',
   components: {},
   data () {
     return {}
